@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
     Box,
     Paper,
@@ -122,7 +122,6 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
             const payload = validateAndGetPayload(formData);
             if (!payload) return;
             await register(payload);
-            setIsLoginMode();
         } catch (error: any) {
             setError(error.message);
         } finally {
@@ -139,9 +138,11 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
           );
     }
 
-    useEffect(()=>{
-        console.log('consoles of ',formData)
-    },[formData])
+    React.useEffect(() => {
+        if(success && !error){
+            setIsLoginMode();
+        }
+    },[success,error])
 
     return (
         <Box sx={styles.formContainer}>
@@ -195,7 +196,7 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
                             label="Phone Number"
                             name="number"
                             autoComplete="number"
-                            value={formData.number}
+                            value={formData.number || ''}
                             onChange={handleInputChange}
                             error={!!error}
                         />

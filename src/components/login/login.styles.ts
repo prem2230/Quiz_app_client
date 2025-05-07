@@ -49,9 +49,9 @@ export  const useStyles = () => {
         },
         '& input': {
           '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus, &:-webkit-autofill:active': {
-            '-webkit-box-shadow': '0 0 0 30px white inset !important',
-            '-webkit-text-fill-color': `${theme.palette.text.primary} !important`,
-            'caret-color': theme.palette.text.primary,
+            WebkitBoxShadow: '0 0 0 30px white inset !important',
+            WebkitTextFillColor: `${theme.palette.text.primary} !important`,
+            caretColor: theme.palette.text.primary,
             'transition': 'background-color 5000s ease-in-out 0s',
           },
           '&:-internal-autofill-selected': {
