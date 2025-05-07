@@ -1,0 +1,524 @@
+{
+  "tests": {
+    "react-basics": {
+      "id": "eda83505-73ed-4y94a6-5f88a08ac1b0",
+      "title": "React Fundamentals",
+      "description": "Test your knowledge of React fundamentals including components, props, and state",
+      "duration": 10,
+      "difficulty": "easy",
+      "totalMarks": 20,
+      "questions": [
+        {
+          "id": 1,
+          "question": "What is React?",
+          "options": [
+            {
+              "id": 0,
+              "text": "A JavaScript library for building user interfaces"
+            },
+            {
+              "id": 1,
+              "text": "A programming language"
+            },
+            {
+              "id": 2,
+              "text": "A database management system"
+            },
+            {
+              "id": 3,
+              "text": "An operating system"
+            }
+          ],
+          "correctAnswer": 0,
+          "explanation": "React is a JavaScript library developed by Facebook for building user interfaces, particularly single-page applications."
+        },
+        {
+          "id": 2,
+          "question": "What is JSX?",
+          "options": [
+            {
+              "id": 0,
+              "text": "A JavaScript XML parser"
+            },
+            {
+              "id": 1,
+              "text": "A syntax extension for JavaScript that allows you to write HTML-like code"
+            },
+            {
+              "id": 2,
+              "text": "A new programming language"
+            },
+            {
+              "id": 3,
+              "text": "A database query language"
+            }
+          ],
+          "correctAnswer": 1,
+          "explanation": "JSX is a syntax extension for JavaScript that lets you write HTML-like code within JavaScript code."
+        }, 
+        {
+          "id": 3,
+          "question": "What is a React component?",
+          "options": [
+            {
+              "id": 0,
+              "text": "A function that returns JSX"
+            },
+            {
+              "id": 1,
+              "text": "A way to end JavaScript execution"
+            },
+            {
+              "id": 2,
+              "text": "A type of loop"
+            },
+            {
+              "id": 3,
+              "text": "A database table"
+            }
+          ],
+          "correctAnswer": 0,
+          "explanation": "A React component is a reusable piece of code that returns JSX, which describes what the UI should look like."
+        },
+        {
+          "id": 4,
+          "question": "What is a React prop?",
+          "options": [
+            {
+              "id": 0,
+              "text": "A way to end JavaScript execution"
+            },
+            {
+              "id": 1,
+              "text": "A type of loop"
+            },
+            {
+              "id": 2,
+              "text": "A way to pass data from a parent component to a child component"
+            },
+            {
+              "id": 3,
+              "text": "A database query"
+            }
+          ],
+          "correctAnswer": 2,
+          "explanation": "A React prop is a way to pass data from a parent component to a child component."
+        },
+        {
+          "id": 5,
+          "question": "What is a React state?",
+          "options": [
+            {
+              "id": 0,
+              "text": "A way to end JavaScript execution"
+            },
+            {
+              "id": 1,
+              "text": "A type of loop"
+            },
+            {
+              "id": 2,
+              "text": "A way to manage data within a component"
+            },
+            {
+              "id": 3,
+              "text": "A database query"
+            }
+          ],
+          "correctAnswer": 2,
+          "explanation": "A React state is a way to manage data within a component."
+        }
+      ]
+    },
+    "javascript-advanced": {
+      "id": "7593e807-8ff4-4ydc19-8eaaf2ce555e",
+      "title": "Advanced JavaScript",
+      "description": "Test your knowledge of JavaScript concepts including closures, promises, and async/await",
+      "duration": 45,
+      "difficulty": "hard",
+      "totalMarks": 30,
+      "questions": [
+        {
+          "id": 1,
+          "question": "What is a closure in JavaScript?",
+          "options": [
+            {
+              "id": 0,
+              "text": "A function that has access to variables in its outer scope"
+            },
+            {
+              "id": 1,
+              "text": "A way to close browser windows"
+            },
+            {
+              "id": 2,
+              "text": "A method to end JavaScript execution"
+            },
+            {
+              "id": 3,
+              "text": "A type of loop"
+            }
+          ],
+          "correctAnswer": 0,
+          "explanation": "A closure is a function that has access to variables in its outer (enclosing) lexical scope, even after the outer function has returned."
+        },
+        {
+          "id": 2,
+          "question": "What is a Promise in JavaScript?",
+          "options": [
+            {
+              "id": 0,
+              "text": "A way to end JavaScript execution"
+            },
+            {
+              "id": 1,
+              "text": "A type of loop"
+            },
+            {
+              "id": 2,
+              "text": "An object representing the eventual completion or failure of an asynchronous operation"
+            },
+            {
+              "id": 3,
+              "text": "A database query"
+            }
+          ],
+          "correctAnswer": 2,
+          "explanation": "A Promise is an object representing the eventual completion or failure of an asynchronous operation."
+        },
+        {
+          "id": 3,
+          "question": "What is async/await in JavaScript?",
+          "options": [
+            {
+              "id": 0,
+              "text": "A way to end JavaScript execution"
+            },
+            {
+              "id": 1,
+              "text": "A type of loop"
+            },
+            {
+              "id": 2,
+              "text": "A way to write asynchronous code that looks synchronous"
+            },
+            {
+              "id": 3,
+              "text": "A database query"
+            }
+          ],
+          "correctAnswer": 2,
+          "explanation": "Async/await is a way to write asynchronous code that looks synchronous, making it easier to understand and maintain."
+        },
+        {
+          "id": 4,
+          "question": "What is the event loop in JavaScript?",
+          "options": [
+            {
+              "id": 0,
+              "text": "A way to end JavaScript execution"
+            },
+            {
+              "id": 1,
+              "text": "A type of loop"
+            },
+            {
+              "id": 2,
+              "text": "A way to end JavaScript execution"
+            },
+            {
+              "id": 3,
+              "text": "A database query"
+            }
+          ],
+          "correctAnswer": 1,
+          "explanation": "The event loop is a mechanism that allows JavaScript to perform non-blocking I/O operations, even with callbacks."
+        },
+        {
+          "id": 5,
+          "question": "What is the difference between null and undefined in JavaScript?",
+          "options": [
+            {
+              "id": 0,
+              "text": "They are the same and can be used interchangeably"
+            },
+            {
+              "id": 1,
+              "text": "Null represents an intentional non-value, while undefined represents an uninitialized value"
+            },
+            {
+              "id": 2,
+              "text": "Undefined represents an intentional non-value, while null represents an uninitialized value"
+            },
+            {
+              "id": 3,
+              "text": "Null represents an uninitialized value, while undefined represents an intentional non-value"
+            }
+          ],
+          "correctAnswer": 1,
+          "explanation": "Null represents an uninitialized value, while undefined represents an intentional non-value."
+        }
+      ]
+    },
+    "typescript-basics": {
+      "id": "b159fb27-ef8d-4y0f89-145cdcdc765b",
+      "title": "TypeScript Fundamentals",
+      "description": "Learn the basics of TypeScript including types, interfaces, and generics",
+      "duration": 40,
+      "difficulty": "medium",
+      "totalMarks": 25,
+      "questions": [
+        {
+          "id": 1,
+          "question": "What is TypeScript?",
+          "options": [
+            {
+              "id": 0,
+              "text": "A superset of JavaScript that adds static typing"
+            },
+            {
+              "id": 1,
+              "text": "A new programming language unrelated to JavaScript"
+            },
+            {
+              "id": 2,
+              "text": "A JavaScript framework"
+            },
+            {
+              "id": 3,
+              "text": "A testing framework"
+            }
+          ],
+          "correctAnswer": 0,
+          "explanation": "TypeScript is a strongly typed programming language that builds on JavaScript, giving you better tooling at any scale."
+        },
+        {
+          "id": 2,
+          "question": "What is a type in TypeScript?",
+          "options": [
+            {
+              "id": 0,
+              "text": "A way to end JavaScript execution"
+            },
+            {
+              "id": 1,
+              "text": "A type of loop"
+            },
+            {
+              "id": 2,
+              "text": "A way to end JavaScript execution"
+            },
+            {
+              "id": 3,
+              "text": "A database query"
+            }
+          ],
+          "correctAnswer": 1,
+          "explanation": "A type is a way to end JavaScript execution."
+        },
+        {
+          "id": 3,
+          "question": "What is an interface in TypeScript?",
+          "options": [
+            {
+              "id": 0,
+              "text": "A way to end JavaScript execution"
+            },
+            {
+              "id": 1,
+              "text": "A type of loop"
+            },
+            {
+              "id": 2,
+              "text": "A way to end JavaScript execution"
+            },
+            {
+              "id": 3,
+              "text": "A database query"
+            }
+          ],
+          "correctAnswer": 1,
+          "explanation": "An interface is a way to end JavaScript execution."
+        },
+        {
+          "id": 4,
+          "question": "What is a generic in TypeScript?",
+          "options": [
+            {
+              "id": 0,
+              "text": "A way to end JavaScript execution"
+            },
+            {
+              "id": 1,
+              "text": "A type of loop"
+            },
+            {
+              "id": 2,
+              "text": "A way to end JavaScript execution"
+            },
+            {
+              "id": 3,
+              "text": "A database query"
+            }
+          ],
+          "correctAnswer": 1,
+          "explanation": "A generic is a way to end JavaScript execution."
+        },
+        {
+          "id": 5,
+          "question": "What is the difference between TypeScript and JavaScript?",
+          "options": [
+            {
+              "id": 0,
+              "text": "TypeScript is a superset of JavaScript that adds static typing"
+            },
+            {
+              "id": 1,
+              "text": "TypeScript is a new programming language unrelated to JavaScript"
+            },
+            {
+              "id": 2,
+              "text": "TypeScript is a JavaScript framework"
+            },
+            {
+              "id": 3,
+              "text": "TypeScript is a testing framework"
+            }
+          ],
+          "correctAnswer": 0,
+          "explanation": "TypeScript is a superset of JavaScript that adds static typing, allowing you to catch errors early in the development process."
+        }
+      ]
+    },
+    "nodejs-basics": {
+      "id": "nodejs-basics",
+      "title": "Node.js Fundamentals",
+      "description": "Test your knowledge of Node.js basics including modules, npm, and event loop",
+      "duration": 35,
+      "difficulty": "medium",
+      "totalMarks": 25,
+      "questions": [
+        {
+          "id": 1,
+          "question": "What is Node.js?",
+          "options": [
+            {
+              "id": 0,
+              "text": "A runtime environment for executing JavaScript code outside the browser"
+            },
+            {
+              "id": 1,
+              "text": "A programming language"
+            },
+            {
+              "id": 2,
+              "text": "A database"
+            },
+            {
+              "id": 3,
+              "text": "A web browser"
+            }
+          ],
+          "correctAnswer": 0,
+          "explanation": "Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine that allows you to run JavaScript on the server side."
+        },
+        {
+          "id": 2,
+          "question": "What is a module in Node.js?",
+          "options": [
+            {
+              "id": 0,
+              "text": "A way to end JavaScript execution"
+            },
+            {
+              "id": 1,
+              "text": "A type of loop"
+            },
+            {
+              "id": 2,
+              "text": "A way to end JavaScript execution"
+            },
+            {
+              "id": 3,
+              "text": "A database query"
+            }
+          ],
+          "correctAnswer": 1,
+          "explanation": "A module is a way to end JavaScript execution."
+        },
+        {
+          "id": 3,
+          "question": "What is npm in Node.js?",
+          "options": [
+            {
+              "id": 0,
+              "text": "A way to end JavaScript execution"
+            },
+            {
+              "id": 1,
+              "text": "A type of loop"
+            },
+            {
+              "id": 2,
+              "text": "A way to end JavaScript execution"
+            },
+            {
+              "id": 3,
+              "text": "A database query"
+            }
+          ],
+          "correctAnswer": 1,
+          "explanation": "npm is a way to end JavaScript execution."
+        },
+        {
+          "id": 4,
+          "question": "What is the event loop in Node.js?",
+          "options": [
+            {
+              "id": 0,
+              "text": "A way to end JavaScript execution"
+            },
+            {
+              "id": 1,
+              "text": "A type of loop"
+            },
+            {
+              "id": 2,
+              "text": "A way to end JavaScript execution"
+            },
+            {
+              "id": 3,
+              "text": "A database query"
+            }
+          ],
+          "correctAnswer": 1,
+          "explanation": "The event loop is a mechanism that allows Node.js to perform non-blocking I/O operations, even with callbacks."
+        },
+        {
+          "id": 5,
+          "question": "What is the difference between Node.js and JavaScript?",
+          "options": [
+            {
+              "id": 0,
+              "text": "Node.js is a superset of JavaScript that adds static typing"
+            },
+            {
+              "id": 1,
+              "text": "Node.js is a new programming language unrelated to JavaScript"
+            },
+            {
+              "id": 2,
+              "text": "Node.js is a JavaScript framework"
+            },
+            {
+              "id": 3,
+              "text": "Node.js is a testing framework"
+            }
+          ],
+          "correctAnswer": 0,
+          "explanation": "Node.js is a runtime environment for executing JavaScript code outside the browser, allowing you to run JavaScript on the server side."
+        }
+      ]
+    }
+  }
+}
