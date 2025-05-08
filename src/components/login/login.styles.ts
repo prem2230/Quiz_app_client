@@ -61,10 +61,11 @@ export  const useStyles = () => {
             backgroundColor: 'white !important',
           },
         }
-
       },
+      
       '& .MuiInputLabel-root': {
         fontSize: '14px',
+        color: theme.palette.text.primary,
       },
       '& .MuiInputLabel-shrink': {
         fontSize: '16px',

@@ -53,55 +53,55 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
     const [showPassword, setShowPassword] = useState<showPasswordProps>({
         password: false,
         confirmPassword: false,
-        });
+    });
 
     const validateAndGetPayload = (formData: RegisterFormData) => {
 
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const numberPattern = /^\d+$/;
-    const usernamePattern = /^[a-zA-Z0-9_]+$/;
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const numberPattern = /^\d+$/;
+        const usernamePattern = /^[a-zA-Z0-9_]+$/;
 
-    try {
-      if (!formData?.username || !formData?.email || !formData?.number || !formData?.password || !formData?.confirmPassword) {
-        throw new Error('Please fill in all fields.');
-      }
+        try {
+            if (!formData?.username || !formData?.email || !formData?.number || !formData?.password || !formData?.confirmPassword) {
+                throw new Error('Please fill in all fields.');
+            }
 
-      if (formData?.password.length < 6) {
-        throw new Error('Password must be at least 6 characters');
-      }
+            if (formData?.password.length < 6) {
+                throw new Error('Password must be at least 6 characters');
+            }
 
-      if (!emailPattern.test(formData?.email)) {
-        throw new Error('Please enter a valid email address.');
-      }
+            if (!emailPattern.test(formData?.email)) {
+                throw new Error('Please enter a valid email address.');
+            }
 
-      if (formData?.number !==null) {
-        if(!numberPattern.test(String(formData?.number))) {
-            throw new Error('Phone number must contain only digits.');
+            if (formData?.number !== null) {
+                if (!numberPattern.test(String(formData?.number))) {
+                    throw new Error('Phone number must contain only digits.');
+                }
+                if (String(formData?.number).length !== 10) {
+                    throw new Error('Please enter a valid 10-digit phone number.');
+                }
+            }
+
+            if (!usernamePattern.test(formData?.username)) {
+                throw new Error('Username can only contain letters, numbers, and underscores.');
+            }
+
+            if (formData?.password !== formData?.confirmPassword) {
+                throw new Error('Passwords do not match.');
+            }
+
+            return {
+                email: formData?.email,
+                username: formData?.username,
+                password: formData?.password,
+                role: formData?.role,
+                number: formData?.number ? Number(formData?.number) : null,
+            }
+        } catch (error: any) {
+            setError(error.message);
         }
-        if (String(formData?.number).length !== 10) {
-          throw new Error('Please enter a valid 10-digit phone number.');
-        }
-      }
-
-      if (!usernamePattern.test(formData?.username)) {
-        throw new Error('Username can only contain letters, numbers, and underscores.');
-      }
-
-      if(formData?.password !== formData?.confirmPassword) {
-        throw new Error('Passwords do not match.');
-      }
-
-      return {
-        email: formData?.email,
-        username: formData?.username,
-        password: formData?.password,
-        role: formData?.role,
-        number: formData?.number ? Number(formData?.number) : null,
-      }
-    } catch (error: any) {
-      setError(error.message);
     }
-  }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -132,17 +132,17 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
     const togglePasswordVisibility = (type: 'password' | 'cPassword') => {
         setShowPassword(prev => ({
             ...prev,
-            password: type ==='password' ? !prev.password : prev.password ,
-            confirmPassword: type ==='cPassword' ? !prev.confirmPassword : prev.confirmPassword,
+            password: type === 'password' ? !prev.password : prev.password,
+            confirmPassword: type === 'cPassword' ? !prev.confirmPassword : prev.confirmPassword,
         })
-          );
+        );
     }
 
     React.useEffect(() => {
-        if(success && !error){
+        if (success && !error) {
             setIsLoginMode();
         }
-    },[success,error])
+    }, [success, error])
 
     return (
         <Box sx={styles.formContainer}>
@@ -218,7 +218,7 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
                                     <InputAdornment position="end">
                                         <IconButton
                                             aria-label="toggle password visibility"
-                                            onClick={()=>togglePasswordVisibility('password')}
+                                            onClick={() => togglePasswordVisibility('password')}
                                             edge="end"
                                         >
                                             {showPassword?.password ? <LockOutline /> : <LockOpen />}
@@ -245,7 +245,7 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
                                     <InputAdornment position="end">
                                         <IconButton
                                             aria-label="toggle password visibility"
-                                            onClick={()=>togglePasswordVisibility('cPassword')}
+                                            onClick={() => togglePasswordVisibility('cPassword')}
                                             edge="end"
                                         >
                                             {showPassword?.confirmPassword ? <LockOutline /> : <LockOpen />}
@@ -270,7 +270,7 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
                         </Button>
 
                         <Box>
-                            <Typography variant="body2" color="text.secondary">
+                            <Typography variant="body2" color="text.primary">
                                 Already have an account? <Link onClick={() => setIsLoginMode()} variant="body2" sx={{ cursor: 'pointer' }} >Login here !</Link>
                             </Typography>
                         </Box>

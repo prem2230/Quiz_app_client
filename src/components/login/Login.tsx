@@ -25,14 +25,14 @@ interface LoginFormData {
 }
 
 interface LoginProps {
-    isLoginMode: boolean;
-    setIsLoginMode:() => void;
-    }
+  isLoginMode: boolean;
+  setIsLoginMode: () => void;
+}
 
-const Login = ({ setIsLoginMode }:LoginProps) => {
+const Login = ({ setIsLoginMode }: LoginProps) => {
 
   const styles = useStyles();
-  const { login, loading, setLoading, error, setError,success,setSuccess } = useAuth();
+  const { login, loading, setLoading, error, setError, success, setSuccess } = useAuth();
   const [formData, setFormData] = useState<LoginFormData>({
     identifier: '',
     password: '',
@@ -104,94 +104,94 @@ const Login = ({ setIsLoginMode }:LoginProps) => {
     setShowPassword((prev) => !prev);
   }
 
-  return(
-        <Box sx={styles.formContainer}>
-          <Typography component="h1" variant="h5">
-            {'Ready to get started? '}
-          </Typography>
-          <Paper
-            elevation={3}
-            sx={styles.formPaper}
-          >
-              <CustomizedSnackbars
-                open={!!error || !!success}
-                setSuccess={() => setSuccess('')}
-                setError={() => setError('')}
-                message={error || success || ''}
-                severity={!!error ? "error" : "success"}
-                />
-            <Box component="form" onSubmit={handleSubmit} noValidate>
-              <Stack spacing={3}>
-                <TextField
-                  sx={styles.formField}
-                  required
-                  fullWidth
-                  id="identifier"
-                  label="Email or Username or Phone Number"
-                  name="identifier"
-                  autoComplete="identifier"
-                  autoFocus
-                  value={formData.identifier}
-                  onChange={handleInputChange}
-                  error={!!error}
-                />
+  return (
+    <Box sx={styles.formContainer}>
+      <Typography component="h1" variant="h5">
+        {'Ready to get started? '}
+      </Typography>
+      <Paper
+        elevation={3}
+        sx={styles.formPaper}
+      >
+        <CustomizedSnackbars
+          open={!!error || !!success}
+          setSuccess={() => setSuccess('')}
+          setError={() => setError('')}
+          message={error || success || ''}
+          severity={!!error ? "error" : "success"}
+        />
+        <Box component="form" onSubmit={handleSubmit} noValidate>
+          <Stack spacing={3}>
+            <TextField
+              sx={styles.formField}
+              required
+              fullWidth
+              id="identifier"
+              label="Email or Username or Phone Number"
+              name="identifier"
+              autoComplete="identifier"
+              autoFocus
+              value={formData.identifier}
+              onChange={handleInputChange}
+              error={!!error}
+            />
 
-                <TextField
-                  sx={styles.formField}
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type={showPassword ? 'text' : 'password'}
-                  id="password"
-                  autoComplete="current-password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  error={!!error}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={togglePasswordVisibility}
-                          edge="end"
-                        >
-                          {showPassword ? <LockOutline  /> : <LockOpen />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
+            <TextField
+              sx={styles.formField}
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type={showPassword ? 'text' : 'password'}
+              id="password"
+              autoComplete="current-password"
+              value={formData.password}
+              onChange={handleInputChange}
+              error={!!error}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={togglePasswordVisibility}
+                      edge="end"
+                    >
+                      {showPassword ? <LockOutline /> : <LockOpen />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
 
-                <Box>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
-                </Box>
-
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  disabled={loading}
-                  sx={styles.button}
-                >
-                  {loading ? (
-                    <CircularProgress size={24} color="inherit" />
-                  ) : (
-                    'Sign In'
-                  )}
-                </Button>
-
-                <Box>
-                  <Typography variant="body2" color="text.secondary">
-                    Don't have an account? <Link onClick={() => setIsLoginMode()} variant="body2" sx={{cursor:'pointer'}} >Register here !</Link>
-                  </Typography>
-                </Box>
-              </Stack>
+            <Box>
+              <Link href="#" variant="body2">
+                Forgot password?
+              </Link>
             </Box>
-          </Paper>
+
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              disabled={loading}
+              sx={styles.button}
+            >
+              {loading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                'Sign In'
+              )}
+            </Button>
+
+            <Box>
+              <Typography variant="body2" color="text.primary">
+                Don't have an account? <Link onClick={() => setIsLoginMode()} variant="body2" sx={{ cursor: 'pointer' }} >Register here !</Link>
+              </Typography>
+            </Box>
+          </Stack>
         </Box>
+      </Paper>
+    </Box>
   );
 };
 

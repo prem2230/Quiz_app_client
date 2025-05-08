@@ -77,6 +77,7 @@ export const authSlice = createSlice({
             state.user = null;
             state.token = null;
             state.error = null;
+            state.success = 'Successfully logged out';
             localStorage.removeItem('token');
         },
     },

@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { Box, CssBaseline } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import Navbar from './components/Navbar';
+import Navbar from './components/navBar/Navbar';
 import Home from './components/Home';
 import Quiz from './components/Quiz';
 import Results from './components/Results';
@@ -18,6 +18,10 @@ const theme = createTheme({
     secondary: {
       main: '#615e5e',
     },
+    text: {
+      primary: '#151414',
+      secondary: '#ffffff',
+    }
   },
 });
 
@@ -31,7 +35,7 @@ const Layout = () => {
       {!isLoginPage && <Navbar />}
       <Box component="main" sx={{ flexGrow: 1, py: isLoginPage ? 0 : 3 }}>
         <Routes>
-          <Route path="/" element={ isAuthenticated ? <Navigate to="/home" replace /> : <Login />} />
+          <Route path="/" element={isAuthenticated ? <Navigate to="/home" replace /> : <Login />} />
           <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
           <Route path="/quiz/:categoryId" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
           <Route path="/results" element={<ProtectedRoute><Results /></ProtectedRoute>} />

@@ -1,8 +1,12 @@
-import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
+import { AppBar, Toolbar, Typography, Box, IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import UserPopover from './UserPopover';
+import { DataArray } from '@mui/icons-material';
+import { useStyles } from './navbar.styles';
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const styles = useStyles();
 
   return (
     <AppBar position="static">
@@ -10,15 +14,16 @@ const Navbar = () => {
         <Typography
           variant="h6"
           component="div"
-          sx={{ cursor: 'pointer' }}
+          sx={styles.headerTypo}
           onClick={() => navigate('/')}
         >
+          <IconButton sx={styles.logo}>
+            <DataArray />
+          </IconButton>
           Tech Quiz
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
-        <Button color="inherit" onClick={() => navigate('/')}>
-          Home
-        </Button>
+        <UserPopover />
       </Toolbar>
     </AppBar>
   );
