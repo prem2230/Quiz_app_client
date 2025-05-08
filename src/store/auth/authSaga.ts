@@ -1,7 +1,7 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { authActions } from "./authSlice";
-import { loginUser, registerUser } from "./authBaseApi";
+import { getUser, loginUser, registerUser } from "./authBaseApi";
 
 // Define interfaces for the API response
 interface User {
@@ -75,8 +75,25 @@ export function* registerUserSaga(
     }
 }
 
+export function* getUserSaga(): Generator<any, void, { success: boolean; message: string; }> {
+    try{
+        const response = yield call(getUser);
+        if(response.success){
+            yield put(authActions.getUserSuccess(response));
+        }else{
+            yield put(authActions.logout());
+        }
+    }catch(error){
+        const errMsg = error instanceof Error ? error.message : 'An error occurred';
+        yield put(authActions.loginFailure(errMsg));
+        yield put(authActions.logout());
+        console.error("Get user failed", error);
+    }
+}
+
 // Root auth watcher saga
 export function* authWatcherSaga() {
     yield takeEvery(authActions.loginRequest.type, loginUserSaga);
     yield takeEvery(authActions.registerRequest.type, registerUserSaga);
+    yield takeEvery(authActions.getUserRequest.type, getUserSaga);
 }

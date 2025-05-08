@@ -8,26 +8,33 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-    const{ isAuthenticated,token, } = useAuth();
-    const location = useLocation();
+  const { isAuthenticated, token, logout, getUser } = useAuth();
+  const location = useLocation();
+  const localToken = localStorage.getItem("token");
 
-    useEffect(()=>{
-        if(token){
-            try{
-                const decodedToken :{ exp: number } = jwtDecode(token);
-                const currentTime = Date.now() / 1000;
+  useEffect(() => {
+    if (localToken && !isAuthenticated) {
+      getUser();
+    }
+  }, [isAuthenticated, localToken]);
 
-                if(decodedToken.exp < currentTime){
-                    //logout user
-                }
-            }catch(error){
-                // logout user
-            }
+  useEffect(() => {
+    if (token) {
+      try {
+        const decodedToken: { exp: number } = jwtDecode(token);
+        const currentTime = Date.now() / 1000;
+
+        if (decodedToken.exp < currentTime) {
+          logout();
         }
-    },[token])
+      } catch (error) {
+        logout();
+      }
+    }
+  }, [token])
 
-  if (!isAuthenticated || !token) {
-    return <Navigate to={"/"} state={{ from : location }} replace />;
+  if (!localToken || !isAuthenticated || !token) {
+    return <Navigate to={"/"} state={{ from: location }} replace />;
   }
 
   return <>{children}</>;

@@ -2,13 +2,16 @@ import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-route
 import { Box, CssBaseline } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Navbar from './components/navBar/Navbar';
-import Home from './components/Home';
-import Quiz from './components/Quiz';
-import Results from './components/Results';
-import NotFound from './components/NotFound';
-import Login from './components/login/Main';
 import useAuth from './components/login/hooks';
 import ProtectedRoute from './utils/ProtectedRoute';
+import { lazy, Suspense } from 'react';
+import Loader from './components/Loader';
+
+const Home = lazy(() => import('./components/Home'));
+const Quiz = lazy(() => import('./components/Quiz'));
+const Results = lazy(() => import('./components/Results'));
+const NotFound = lazy(() => import('./components/NotFound'));
+const Login = lazy(() => import('./components/login/Main'));
 
 const theme = createTheme({
   palette: {
@@ -35,11 +38,11 @@ const Layout = () => {
       {!isLoginPage && <Navbar />}
       <Box component="main" sx={{ flexGrow: 1, py: isLoginPage ? 0 : 3 }}>
         <Routes>
-          <Route path="/" element={isAuthenticated ? <Navigate to="/home" replace /> : <Login />} />
-          <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-          <Route path="/quiz/:categoryId" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
-          <Route path="/results" element={<ProtectedRoute><Results /></ProtectedRoute>} />
-          <Route path="*" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />
+          <Route path="/" element={isAuthenticated ? <Navigate to="/home" replace /> : <Suspense fallback={<Loader />}> <Login /> </Suspense>} />
+          <Route path="/home" element={<ProtectedRoute> <Suspense fallback={<Loader />}> <Home /> </Suspense></ProtectedRoute>} />
+          <Route path="/quiz/:categoryId" element={<ProtectedRoute> <Suspense fallback={<Loader />}> <Quiz /> </Suspense></ProtectedRoute>} />
+          <Route path="/results" element={<ProtectedRoute> <Suspense fallback={<Loader />}> <Results /> </Suspense> </ProtectedRoute>} />
+          <Route path="*" element={<ProtectedRoute> <Suspense fallback={<Loader />}> <NotFound /> </Suspense> </ProtectedRoute>} />
         </Routes>
       </Box>
     </Box>

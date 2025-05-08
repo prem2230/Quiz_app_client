@@ -17,8 +17,10 @@ interface RegisterPayload {
 
 export const LOGIN_USER = '/user/login';
 export const REGISTER_USER = '/user/register';
+export const GET_USER = '/user/profile';
 
 const api = callApi();
 
 export const loginUser = async (payload : LoginPayload) => api.post(LOGIN_USER, payload);
 export const registerUser = async (payload: RegisterPayload) => api.post(REGISTER_USER, payload);
+export const getUser = async() => api.get(GET_USER);

@@ -61,6 +61,11 @@ export const authSlice = createSlice({
             state.success = action.payload.message;
             state.error = null;
         },
+        getUserSuccess:(state,action)=>{
+            state.user = action.payload.user;
+            state.token = localStorage.getItem('token');
+            state.isAuthenticated = true;
+        },
         setSuccess:(state,action)=>{
             state.success = action.payload;
         },
@@ -90,11 +95,13 @@ export const authActions = {
     registerRequest: createAction(`${authSlice.name}/registerRequest`,(payload) => {
         return {payload}
     }),
+    getUserRequest: createAction(`${authSlice.name}/getUserRequest`),
     
     setLoading: authSlice.actions.setLoading,
     setError: authSlice.actions.setError,
     loginSuccess: authSlice.actions.loginSuccess,
     registerSuccess: authSlice.actions.registerSuccess,
+    getUserSuccess: authSlice.actions.getUserSuccess,
     setSuccess: authSlice.actions.setSuccess,
     loginFailure: authSlice.actions.loginFailure,
     registerFailure: authSlice.actions.registerFailure,

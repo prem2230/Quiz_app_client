@@ -36,6 +36,9 @@ export const useAuth = () =>{
         register: useCallback((payload: RegisterPayload) =>{
             dispatch(authActions.registerRequest(payload));
         },[dispatch]),
+        getUser: useCallback(() =>{
+            dispatch(authActions.getUserRequest());
+        },[dispatch]),
         logout:useCallback(() =>{
             dispatch(authActions.logout());
         },[dispatch]),
