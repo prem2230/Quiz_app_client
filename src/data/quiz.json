@@ -1,6 +1,6 @@
 {
-  "tests": {
-    "react-basics": {
+  "tests": [
+    {
       "id": "eda83505-73ed-4y94a6-5f88a08ac1b0",
       "title": "React Fundamentals",
       "description": "Test your knowledge of React fundamentals including components, props, and state",
@@ -130,7 +130,7 @@
         }
       ]
     },
-    "javascript-advanced": {
+    {
       "id": "7593e807-8ff4-4ydc19-8eaaf2ce555e",
       "title": "Advanced JavaScript",
       "description": "Test your knowledge of JavaScript concepts including closures, promises, and async/await",
@@ -260,7 +260,7 @@
         }
       ]
     },
-    "typescript-basics": {
+    {
       "id": "b159fb27-ef8d-4y0f89-145cdcdc765b",
       "title": "TypeScript Fundamentals",
       "description": "Learn the basics of TypeScript including types, interfaces, and generics",
@@ -390,7 +390,7 @@
         }
       ]
     },
-    "nodejs-basics": {
+    {
       "id": "nodejs-basics",
       "title": "Node.js Fundamentals",
       "description": "Test your knowledge of Node.js basics including modules, npm, and event loop",
@@ -520,5 +520,5 @@
         }
       ]
     }
-  }
+  ]
 }

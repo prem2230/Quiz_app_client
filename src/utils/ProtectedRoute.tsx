@@ -5,10 +5,12 @@ import { jwtDecode } from "jwt-decode";
 
 interface ProtectedRouteProps {
   children: ReactNode;
+  allowedRoles?: string[];
+  redirectTo?: string;
 }
 
-const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const { isAuthenticated, token, logout, getUser } = useAuth();
+const ProtectedRoute = ({ children, allowedRoles, redirectTo = "/" }: ProtectedRouteProps) => {
+  const { user, isAuthenticated, token, logout, getUser } = useAuth();
   const location = useLocation();
   const localToken = localStorage.getItem("token");
 
@@ -37,6 +39,11 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     return <Navigate to={"/"} state={{ from: location }} replace />;
   }
 
+  console.log('adsadad', allowedRoles, user, allowedRoles?.includes(user?.role ?? ""), redirectTo)
+  if (allowedRoles && user && !allowedRoles.includes(user.role)) {
+    const redirectPath = user.role === 'admin' ? '/dashboard' : '/home';
+    return <Navigate to={redirectTo || redirectPath} replace />;
+  }
   return <>{children}</>;
 };
 

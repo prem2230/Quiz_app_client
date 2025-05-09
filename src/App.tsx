@@ -6,9 +6,12 @@ import useAuth from './components/login/hooks';
 import ProtectedRoute from './utils/ProtectedRoute';
 import { lazy, Suspense } from 'react';
 import Loader from './components/Loader';
+import CreateEditQuestion from './components/question/CreateEditQuestion';
+import ViewQuestions from './components/question/ViewQuestions';
 
 const Home = lazy(() => import('./components/Home'));
 const Quiz = lazy(() => import('./components/Quiz'));
+const Dashboard = lazy(() => import('./components/dashboard/Dashboard'));
 const Results = lazy(() => import('./components/Results'));
 const NotFound = lazy(() => import('./components/NotFound'));
 const Login = lazy(() => import('./components/login/Main'));
@@ -17,9 +20,11 @@ const theme = createTheme({
   palette: {
     primary: {
       main: '#151414',
+      light: '#DAEF4D',
     },
     secondary: {
       main: '#615e5e',
+      light: '#A1B8BC',
     },
     text: {
       primary: '#151414',
@@ -31,14 +36,23 @@ const theme = createTheme({
 const Layout = () => {
   const location = useLocation();
   const isLoginPage = location.pathname === '/';
-  const { isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
+
+  const getRedirectPath = () => {
+    if (!user) return '/';
+    return user.role === 'admin' ? '/dashboard' : '/home';
+  }
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', width: '100%' }}>
       {!isLoginPage && <Navbar />}
       <Box component="main" sx={{ flexGrow: 1, py: isLoginPage ? 0 : 3 }}>
         <Routes>
-          <Route path="/" element={isAuthenticated ? <Navigate to="/home" replace /> : <Suspense fallback={<Loader />}> <Login /> </Suspense>} />
+          <Route path="/" element={isAuthenticated ? <Navigate to={getRedirectPath()} replace /> : <Suspense fallback={<Loader />}> <Login /> </Suspense>} />
+          <Route path="/dashboard" element={<ProtectedRoute allowedRoles={["admin"]}> <Suspense fallback={<Loader />}> <Dashboard /></Suspense></ProtectedRoute>}></Route>
+          <Route path="/dashboard/create-question" element={<ProtectedRoute allowedRoles={["admin"]} > <Suspense fallback={<Loader />}> <CreateEditQuestion /></Suspense></ProtectedRoute>}></Route>
+          <Route path="/dashboard/edit-question/:questionId" element={<ProtectedRoute allowedRoles={["admin"]} > <Suspense fallback={<Loader />}> <CreateEditQuestion /></Suspense></ProtectedRoute>}></Route>
+          <Route path="/dashboard/view-questions" element={<ProtectedRoute allowedRoles={["admin"]} > <Suspense fallback={<Loader />}> <ViewQuestions /></Suspense></ProtectedRoute>}></Route>
           <Route path="/home" element={<ProtectedRoute> <Suspense fallback={<Loader />}> <Home /> </Suspense></ProtectedRoute>} />
           <Route path="/quiz/:categoryId" element={<ProtectedRoute> <Suspense fallback={<Loader />}> <Quiz /> </Suspense></ProtectedRoute>} />
           <Route path="/results" element={<ProtectedRoute> <Suspense fallback={<Loader />}> <Results /> </Suspense> </ProtectedRoute>} />
