@@ -39,7 +39,6 @@ const ProtectedRoute = ({ children, allowedRoles, redirectTo = "/" }: ProtectedR
     return <Navigate to={"/"} state={{ from: location }} replace />;
   }
 
-  console.log('adsadad', allowedRoles, user, allowedRoles?.includes(user?.role ?? ""), redirectTo)
   if (allowedRoles && user && !allowedRoles.includes(user.role)) {
     const redirectPath = user.role === 'admin' ? '/dashboard' : '/home';
     return <Navigate to={redirectTo || redirectPath} replace />;

@@ -14,7 +14,6 @@ interface User {
 
 interface LoginResponse {
     success: string;
-    data: { payload: LoginResponse; type: "auth/loginSuccess"; };
     message: string;
     token: string;
     user: User;
@@ -31,7 +30,7 @@ interface RegisterPayload {
     email: string;
     username: string;
     password: string;
-    role:'admin' | 'user'; 
+    role: 'admin' | 'user';
     number: number | null;
 }
 
@@ -48,7 +47,7 @@ export function* loginUserSaga(
         const response = yield call(loginUser, action.payload);
         if (response.success) {
             yield put(authActions.loginSuccess(response));
-        }else{
+        } else {
             yield put(authActions.loginFailure(response.message));
         }
     } catch (error) {
@@ -65,7 +64,7 @@ export function* registerUserSaga(
         const response = yield call(registerUser, action.payload);
         if (response.success) {
             yield put(authActions.registerSuccess(response));
-        }else{
+        } else {
             yield put(authActions.registerFailure(response.message));
         }
     } catch (error) {
@@ -76,14 +75,14 @@ export function* registerUserSaga(
 }
 
 export function* getUserSaga(): Generator<any, void, { success: boolean; message: string; }> {
-    try{
+    try {
         const response = yield call(getUser);
-        if(response.success){
+        if (response.success) {
             yield put(authActions.getUserSuccess(response));
-        }else{
+        } else {
             yield put(authActions.logout());
         }
-    }catch(error){
+    } catch (error) {
         const errMsg = error instanceof Error ? error.message : 'An error occurred';
         yield put(authActions.loginFailure(errMsg));
         yield put(authActions.logout());

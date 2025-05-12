@@ -1,10 +1,10 @@
 import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface User{
+interface User {
     id: string;
-    email:string;
+    email: string;
     username: string;
-    role:string,
+    role: string,
     number: number;
 }
 
@@ -23,7 +23,7 @@ interface AuthState {
     token: string | null;
 }
 
-interface RegisterResponse{
+interface RegisterResponse {
     success: string;
     message: string;
 }
@@ -31,42 +31,42 @@ interface RegisterResponse{
 const initialState: AuthState = {
     isAuthenticated: false,
     user: null,
-    loading: false, 
+    loading: false,
     error: null,
     success: null,
-    token: null,    
+    token: null,
 };
 
 export const authSlice = createSlice({
-    name:"auth",
+    name: "auth",
     initialState,
     reducers: {
-        setLoading: (state,action) => {
+        setLoading: (state, action) => {
             state.loading = action.payload;
         },
         setError: (state, action) => {
             state.error = action.payload;
         },
-        loginSuccess: (state, action:PayloadAction<LoginResponse>) => {
-           state.isAuthenticated = true;
-           state.user = action.payload.user;
-           state.token = action.payload.token;
-           state.loading = false;
-           state.success = action.payload.message;
-           state.error = null;
-           localStorage.setItem('token', action.payload.token);
+        loginSuccess: (state, action: PayloadAction<LoginResponse>) => {
+            state.isAuthenticated = true;
+            state.user = action.payload.user;
+            state.token = action.payload.token;
+            state.loading = false;
+            state.success = action.payload.message;
+            state.error = null;
+            localStorage.setItem('token', action.payload.token);
         },
-        registerSuccess: (state, action:PayloadAction<RegisterResponse>) => {
+        registerSuccess: (state, action: PayloadAction<RegisterResponse>) => {
             state.loading = false;
             state.success = action.payload.message;
             state.error = null;
         },
-        getUserSuccess:(state,action)=>{
+        getUserSuccess: (state, action) => {
             state.user = action.payload.user;
             state.token = localStorage.getItem('token');
             state.isAuthenticated = true;
         },
-        setSuccess:(state,action)=>{
+        setSuccess: (state, action) => {
             state.success = action.payload;
         },
         loginFailure: (state, action: PayloadAction<string>) => {
@@ -89,14 +89,14 @@ export const authSlice = createSlice({
 })
 
 export const authActions = {
-    loginRequest: createAction(`${authSlice.name}/loginRequest`,(payload) => {
-        return {payload}
+    loginRequest: createAction(`${authSlice.name}/loginRequest`, (payload) => {
+        return { payload }
     }),
-    registerRequest: createAction(`${authSlice.name}/registerRequest`,(payload) => {
-        return {payload}
+    registerRequest: createAction(`${authSlice.name}/registerRequest`, (payload) => {
+        return { payload }
     }),
     getUserRequest: createAction(`${authSlice.name}/getUserRequest`),
-    
+
     setLoading: authSlice.actions.setLoading,
     setError: authSlice.actions.setError,
     loginSuccess: authSlice.actions.loginSuccess,
@@ -108,11 +108,11 @@ export const authActions = {
     logout: authSlice.actions.logout,
 }
 
-export const selectAuth = (state : {auth:AuthState}) => state.auth.loading;   
-export const selectUser = (state : {auth:AuthState}) => state.auth.user;
-export const SelectIsAuthenticated = (state : {auth:AuthState}) => state.auth.isAuthenticated;
-export const SelectAuthLoading = (state : {auth:AuthState}) => state.auth.loading;
-export const SelectAuthError = (state : {auth:AuthState}) => state.auth.error;
-export const selectAuthSuccess = (state : {auth:AuthState}) => state.auth.success;
+export const selectUser = (state: { auth: AuthState }) => state.auth.user;
+export const selectIsAuthenticated = (state: { auth: AuthState }) => state.auth.isAuthenticated;
+export const selectAuthLoading = (state: { auth: AuthState }) => state.auth.loading;
+export const selectAuthError = (state: { auth: AuthState }) => state.auth.error;
+export const selectAuthSuccess = (state: { auth: AuthState }) => state.auth.success;
+export const selectAuthToken = (state: { auth: AuthState }) => state.auth.token;
 
 export default authSlice.reducer;
