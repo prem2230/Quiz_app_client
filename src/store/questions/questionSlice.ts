@@ -48,6 +48,10 @@ export const questionSlice = createSlice({
             state.currentQuestion = action.payload.question;
             state.loading = false;
         },
+        removeQuestion: (state, action) => {
+            state.questions = state.questions.filter((question: Question) => question._id !== action.payload.id);
+            state.loading = false;
+        }
 
     }
 })
@@ -56,10 +60,12 @@ export const questionActions = {
     loadAllQuesRequest: createAction(`${questionSlice.name}/loadAllQuesRequest`),
     loadQuesRequest: createAction(`${questionSlice.name}/loadQuesRequest`, (payload) => { return { payload } }),
     createQuesRequest: createAction(`${questionSlice.name}/createQuesRequest`, (payload) => { return { payload } }),
+    deleteQuesRequest: createAction(`${questionSlice.name}/deleteQuesRequest`, (payload) => { return { payload } }),
 
     setLoading: questionSlice.actions.setLoading,
     loadAllQuestions: questionSlice.actions.loadAllQuestions,
     loadCurrentQuestion: questionSlice.actions.loadCurrentQuestion,
+    removeQuestion: questionSlice.actions.removeQuestion
 
 }
 

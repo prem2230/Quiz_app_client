@@ -7,11 +7,15 @@ import { getTimestampInfo } from "../../utils";
 const ViewQuestions = () => {
 
     const styles = useStyles();
-    const { loadAllQuestions, questions } = useQuestion();
+    const { loadAllQuestions, questions, deleteQuestion } = useQuestion();
 
     useEffect(() => {
         loadAllQuestions();
     }, [])
+
+    const handleDeleteQues = (id: string) => {
+        deleteQuestion({ id })
+    }
 
     return (
         <Container>
@@ -30,7 +34,7 @@ const ViewQuestions = () => {
 
                                     <Box sx={styles.buttonDiv}>
                                         <Button sx={{ ...styles.actionBtn, ...styles.modifyBtn }}>Modify</Button>
-                                        <Button sx={{ ...styles.actionBtn, ...styles.deleteBtn }}>Delete</Button>
+                                        <Button onClick={() => handleDeleteQues(question?._id)} sx={{ ...styles.actionBtn, ...styles.deleteBtn }}>Delete</Button>
                                     </Box>
                                 </Box>
                                 <Typography sx={styles.cardFooterTxt}>{prefix} {time} </Typography>

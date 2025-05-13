@@ -1,5 +1,5 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import { createQuestion, getAllQuestions, getQuestionById } from "./questionBaseApi";
+import { createQuestion, deleteQuestion, getAllQuestions, getQuestionById } from "./questionBaseApi";
 import { questionActions } from "./questionSlice";
 import { snackbarActions } from "../snackbar/snackbarSlice";
 
@@ -84,9 +84,26 @@ export function* createQuestionSaga(action: { payload: QuestionData }): Generato
     }
 }
 
+export function* deleteQuestionSaga(action: { payload: QuestionIdPayload }): Generator<any, void, QuestionResponse> {
+    try {
+        const response = yield call(deleteQuestion, action.payload);
+        if (response.success) {
+            yield put(questionActions.removeQuestion(response));
+            yield put(snackbarActions.onSuccess(response));
+        } else {
+            yield put(snackbarActions.onError(response));
+        }
+    } catch (error) {
+        const errMsg = error instanceof Error ? error.message : 'An error occurred';
+        console.error('Failed to fetch', error);
+        yield put(snackbarActions.onError(errMsg));
+    }
+}
+
 
 export function* questionWatcherSaga() {
     yield takeEvery(questionActions.loadAllQuesRequest.type, loadAllQuestionSaga);
     yield takeEvery((questionActions.loadQuesRequest as any).type, loadQuestionSaga);
     yield takeEvery((questionActions.createQuesRequest as any).type, createQuestionSaga);
+    yield takeEvery((questionActions.deleteQuesRequest as any).type, deleteQuestionSaga);
 }

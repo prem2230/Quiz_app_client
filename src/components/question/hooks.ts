@@ -37,6 +37,9 @@ export const useQuestion = () => {
         createQuestion: useCallback((payload: QuestionData) => {
             dispatch(questionActions.createQuesRequest(payload))
         }, [dispatch]),
+        deleteQuestion: useCallback((payload: QuestionIdPayload) => {
+            dispatch(questionActions.deleteQuesRequest(payload))
+        }, [dispatch]),
 
         loading: useAppSelector(Slice.selectQuesLoading),
         questions: useAppSelector(Slice.selectQuestions),
