@@ -2,6 +2,7 @@ import { call, put, takeEvery } from "redux-saga/effects";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { authActions } from "./authSlice";
 import { getUser, loginUser, registerUser } from "./authBaseApi";
+import { snackbarActions } from "../snackbar/snackbarSlice";
 
 // Define interfaces for the API response
 interface User {
@@ -47,12 +48,13 @@ export function* loginUserSaga(
         const response = yield call(loginUser, action.payload);
         if (response.success) {
             yield put(authActions.loginSuccess(response));
+            yield put(snackbarActions.onSuccess(response));
         } else {
-            yield put(authActions.loginFailure(response.message));
+            yield put(snackbarActions.onError(response))
         }
     } catch (error) {
         const errMsg = error instanceof Error ? error.message : 'An error occurred';
-        yield put(authActions.loginFailure(errMsg));
+        yield put(snackbarActions.onError(errMsg || 'Something went wrong'))
         console.error("Login failed", error);
     }
 }
@@ -64,12 +66,13 @@ export function* registerUserSaga(
         const response = yield call(registerUser, action.payload);
         if (response.success) {
             yield put(authActions.registerSuccess(response));
+            yield put(snackbarActions.onSuccess(response));
         } else {
-            yield put(authActions.registerFailure(response.message));
+            yield put(snackbarActions.onError(response))
         }
     } catch (error) {
         const errMsg = error instanceof Error ? error.message : 'An error occurred';
-        yield put(authActions.registerFailure(errMsg));
+        yield put(snackbarActions.onError(errMsg || 'Something went wrong'))
         console.error("Register failed", error);
     }
 }
@@ -81,11 +84,12 @@ export function* getUserSaga(): Generator<any, void, { success: boolean; message
             yield put(authActions.getUserSuccess(response));
         } else {
             yield put(authActions.logout());
+            yield put(snackbarActions.onError(response.message));
         }
     } catch (error) {
         const errMsg = error instanceof Error ? error.message : 'An error occurred';
-        yield put(authActions.loginFailure(errMsg));
         yield put(authActions.logout());
+        yield put(snackbarActions.onError(errMsg || 'Something went wrong'))
         console.error("Get user failed", error);
     }
 }

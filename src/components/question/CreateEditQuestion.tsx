@@ -1,8 +1,28 @@
 import { Add, CheckCircle, CheckCircleOutline } from "@mui/icons-material";
 import { Box, Button, Container, Grid, InputAdornment, TextField, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useStyles } from "./question.styles";
+import useQuestion from "./hooks";
+import { useSnackbar } from "../snackBar/hooks";
+import { useNavigate } from "react-router-dom";
 
+interface QuestionData {
+    question: string,
+    _id?: string,
+    options: [
+        {
+            _id?: string
+            text: string,
+            isCorrect: boolean
+        }
+    ],
+    explanation: string,
+    marks: number,
+    createdBy?: string,
+    updatedBy?: string,
+    createdAt?: string,
+    updatedAt?: string,
+}
 interface Question {
     question: string,
     explanation: string,
@@ -12,12 +32,16 @@ interface AnswerOption {
     text: string,
     isCorrect: boolean
 }
+
 const MAX_QUES_CHAR = 200;
 const MAX_EXPL_CHAR = 200;
 const MAX_OPT_CHAR = 100;
 
 const CreateEditQuestion = () => {
     const styles = useStyles();
+    const { setErrorSnack } = useSnackbar();
+    const { createQuestion } = useQuestion();
+    const navigate = useNavigate();
     const [question, setQuestion] = useState<Question>({
         question: "",
         explanation: "",
@@ -80,20 +104,60 @@ const CreateEditQuestion = () => {
         });
     }
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const validatePayload = (data: QuestionData) => {
+        if (!data.question.length) {
+            setErrorSnack('Question is required');
+            return false;
+        }
+        if (data.question.length < 10) {
+            setErrorSnack('Question should be atleast 10 characters');
+            return false;
+        }
+        if (!data.explanation.length) {
+            setErrorSnack('Explanation is required');
+            return false;
+        }
+        if (data.explanation.length < 10) {
+            setErrorSnack('Explanation should be atleast 10 characters');
+            return false;
+        }
+        if (!data.marks) {
+            setErrorSnack('Marks is required');
+            return false;
+        }
+        if (data.marks > 10 || data.marks <= 0) {
+            setErrorSnack('Marks should be between 1 to 10');
+            return false;
+        }
+        if (data.options.length < 2) {
+            setErrorSnack('At least two options are required');
+            return false;
+        }
+        if (!data.options.some((opt) => opt.isCorrect)) {
+            setErrorSnack('At least one option should be correct');
+            return false;
+        }
+        return true;
+    }
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        let data = {};
-        data = {
-            ...question,
-            options: options.filter((opt) => opt.text.length)
+        const data: QuestionData = {
+            question: question.question,
+            explanation: question.explanation,
+            marks: question.marks,
+            options: options.filter((opt) => opt.text.length) as [{ _id?: string; text: string; isCorrect: boolean }],
+        };
+        try {
+            if (!validatePayload(data)) return;
+            await createQuestion(data);
+            navigate('/dashboard') // need to fix
+        } catch (error: any) {
+            setErrorSnack(error.message);
         }
         console.log(data);
     }
 
-    // useEffect(() => {
-    //     console.log('uuuu', question);
-    //     console.log('options', options)
-    // }, [question, options])
     return (
         <Container >
             <Typography variant="h4" fontWeight={600} textAlign={"center"}>Create Question</Typography>

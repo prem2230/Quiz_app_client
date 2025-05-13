@@ -17,7 +17,7 @@ import {
 } from '@mui/icons-material';
 import useAuth from './hooks';
 import { useStyles } from './login.styles';
-import CustomizedSnackbars from '../snackBar/SnackBar';
+import { useSnackbar } from '../snackBar/hooks';
 
 interface RegisterFormData {
     email: string;
@@ -41,7 +41,8 @@ interface showPasswordProps {
 const Register = ({ setIsLoginMode }: LoginProps) => {
 
     const styles = useStyles();
-    const { register, loading, setLoading, error, setError, success, setSuccess } = useAuth();
+    const { setErrorSnack } = useSnackbar();
+    const { register, loading, setLoading } = useAuth();
     const [formData, setFormData] = useState<RegisterFormData>({
         email: '',
         username: '',
@@ -99,7 +100,7 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
                 number: formData?.number ? Number(formData?.number) : null,
             }
         } catch (error: any) {
-            setError(error.message);
+            setErrorSnack(error.message);
         }
     }
 
@@ -110,12 +111,10 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
             ...prev,
             [name]: value,
         }));
-        setError('');
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError('');
 
         setLoading(true);
         try {
@@ -123,7 +122,7 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
             if (!payload) return;
             await register(payload);
         } catch (error: any) {
-            setError(error.message);
+            setErrorSnack(error.message);
         } finally {
             setLoading(false);
         }
@@ -138,11 +137,11 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
         );
     }
 
-    React.useEffect(() => {
-        if (success && !error) {
-            setIsLoginMode();
-        }
-    }, [success, error])
+    // React.useEffect(() => {
+    //     if (success && !error) {
+    //         setIsLoginMode();
+    //     }
+    // }, [success, error]) // need to fix
 
     return (
         <Box sx={styles.formContainer}>
@@ -153,13 +152,6 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
                 elevation={3}
                 sx={styles.formPaper}
             >
-                <CustomizedSnackbars
-                    open={!!error || !!success}
-                    setSuccess={() => setSuccess('')}
-                    setError={() => setError('')}
-                    message={error || success || ''}
-                    severity={!!error ? "error" : "success"}
-                />
                 <Box component="form" onSubmit={handleSubmit} noValidate>
                     <Stack spacing={3}>
                         <TextField
@@ -173,7 +165,7 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
                             autoFocus
                             value={formData.email}
                             onChange={handleInputChange}
-                            error={!!error}
+                        // error={!!error} // need to fix
                         />
 
                         <TextField
@@ -186,7 +178,7 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
                             autoComplete="username"
                             value={formData.username}
                             onChange={handleInputChange}
-                            error={!!error}
+                        // error={!!error} // need to fix
                         />
                         <TextField
                             sx={styles.formField}
@@ -198,7 +190,7 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
                             autoComplete="number"
                             value={formData.number || ''}
                             onChange={handleInputChange}
-                            error={!!error}
+                        // error={!!error} // need to fix
                         />
 
                         <TextField
@@ -212,7 +204,7 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
                             autoComplete="current-password"
                             value={formData.password}
                             onChange={handleInputChange}
-                            error={!!error}
+                            // error={!!error} // need to fix
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
@@ -239,7 +231,7 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
                             autoComplete="confirmPassword"
                             value={formData.confirmPassword}
                             onChange={handleInputChange}
-                            error={!!error}
+                            // error={!!error} // need to fix
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">

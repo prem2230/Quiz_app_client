@@ -1,30 +1,40 @@
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
+import React from 'react';
+import { Alert, AlertColor, Snackbar } from '@mui/material';
+import { useSnackbar } from './hooks';
 
-interface CustomizedSnackbarsProps {
-  open: boolean;
-  setError: () => void;
-  setSuccess: () => void;
-  message: string;
-  severity: 'error' | 'warning' | 'info' | 'success';
-}
+const CustomSnackbar = () => {
+    const { snackMessage, severity, setResetSnack } = useSnackbar();
 
-export default function CustomizedSnackbars({ open, setError,setSuccess, message, severity }: CustomizedSnackbarsProps) {
-  return (
-    <div>
-      <Snackbar open={open} autoHideDuration={6000} onClose={() => {severity === 'success' ? setSuccess() : setError()}}>
-        <Alert
-          onClose={() =>{ severity === 'success' ? setSuccess() : setError()}}
-          severity={severity}
-          variant="filled"
-          sx={{ 
-            width: '100%' ,
-            bgcolor: severity === 'error' ? '#fc5c51' : severity === 'warning' ? '#ff9800' : severity === 'info' ? '#2196f3' : '#4caf50',
-        }}
+    const handleClose = (_event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setResetSnack();
+    };
+    if (!snackMessage || !severity) {
+        return null;
+    }
+
+    const alertSeverity = severity === 'warn' ? 'warning' : severity as AlertColor;
+
+    return (
+        <Snackbar
+            open={!!snackMessage}
+            autoHideDuration={6000}
+            onClose={handleClose}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
-          {message}
-        </Alert>
-      </Snackbar>
-    </div>
-  );
-}
+            <Alert
+                onClose={handleClose}
+                severity={alertSeverity}
+                sx={{ width: '100%' }}
+                elevation={6}
+                variant="filled"
+            >
+                {snackMessage}
+            </Alert>
+        </Snackbar>
+    );
+};
+
+export default CustomSnackbar;

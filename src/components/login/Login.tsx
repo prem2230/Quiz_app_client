@@ -17,7 +17,7 @@ import {
 } from '@mui/icons-material';
 import useAuth from './hooks';
 import { useStyles } from './login.styles';
-import CustomizedSnackbars from '../snackBar/SnackBar';
+import { useSnackbar } from '../snackBar/hooks';
 
 interface LoginFormData {
   identifier: string;
@@ -32,7 +32,8 @@ interface LoginProps {
 const Login = ({ setIsLoginMode }: LoginProps) => {
 
   const styles = useStyles();
-  const { login, loading, setLoading, error, setError, success, setSuccess } = useAuth();
+  const { setErrorSnack } = useSnackbar();
+  const { login, loading, setLoading } = useAuth();
   const [formData, setFormData] = useState<LoginFormData>({
     identifier: '',
     password: '',
@@ -71,7 +72,7 @@ const Login = ({ setIsLoginMode }: LoginProps) => {
 
       throw new Error('Please enter a valid email, number, or username.');
     } catch (error: any) {
-      setError(error.message);
+      setErrorSnack(error);
     }
   }
 
@@ -81,12 +82,10 @@ const Login = ({ setIsLoginMode }: LoginProps) => {
       ...prev,
       [name]: value,
     }));
-    setError('');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
 
     setLoading(true);
     try {
@@ -94,7 +93,7 @@ const Login = ({ setIsLoginMode }: LoginProps) => {
       if (!payload) return;
       await login(payload);
     } catch (error: any) {
-      setError(error.message);
+      setErrorSnack(error.message);
     } finally {
       setLoading(false);
     }
@@ -113,13 +112,6 @@ const Login = ({ setIsLoginMode }: LoginProps) => {
         elevation={3}
         sx={styles.formPaper}
       >
-        <CustomizedSnackbars
-          open={!!error || !!success}
-          setSuccess={() => setSuccess('')}
-          setError={() => setError('')}
-          message={error || success || ''}
-          severity={!!error ? "error" : "success"}
-        />
         <Box component="form" onSubmit={handleSubmit} noValidate>
           <Stack spacing={3}>
             <TextField
@@ -133,7 +125,7 @@ const Login = ({ setIsLoginMode }: LoginProps) => {
               autoFocus
               value={formData.identifier}
               onChange={handleInputChange}
-              error={!!error}
+            // error={!!error} // need to fix
             />
 
             <TextField
@@ -147,7 +139,7 @@ const Login = ({ setIsLoginMode }: LoginProps) => {
               autoComplete="current-password"
               value={formData.password}
               onChange={handleInputChange}
-              error={!!error}
+              // error={!!error} // need to fix
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">

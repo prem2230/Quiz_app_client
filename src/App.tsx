@@ -8,6 +8,7 @@ import { lazy, Suspense } from 'react';
 import Loader from './components/Loader';
 import CreateEditQuestion from './components/question/CreateEditQuestion';
 import ViewQuestions from './components/question/ViewQuestions';
+import CustomSnackbar from './components/snackBar/SnackBar';
 
 const Home = lazy(() => import('./components/Home'));
 const Quiz = lazy(() => import('./components/Quiz'));
@@ -46,6 +47,7 @@ const Layout = () => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', width: '100%' }}>
+      <CustomSnackbar />
       {!isLoginPage && <Navbar />}
       <Box component="main" sx={{ flexGrow: 1, py: isLoginPage ? 0 : 3 }}>
         <Routes>
