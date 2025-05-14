@@ -3,7 +3,7 @@ import { Box, Button, Container, Grid, InputAdornment, TextField, Typography } f
 import React, { useEffect, useState } from "react";
 import { useStyles } from "./question.styles";
 import useQuestion from "./hooks";
-import { useSnackbar } from "../snackbar/hooks";
+import { useSnackbar } from "../snackBar/hooks";
 import { useNavigate, useParams } from "react-router-dom";
 import { questionPayloadValidator } from "../../utils";
 
