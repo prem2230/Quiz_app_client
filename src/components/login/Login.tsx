@@ -17,7 +17,7 @@ import {
 } from '@mui/icons-material';
 import useAuth from './hooks';
 import { useStyles } from './login.styles';
-import { useSnackbar } from '../snackBar/hooks';
+import { useSnackbar } from '../snackbar/hooks';
 import { loginPayloadValidator } from '../../utils';
 
 interface LoginFormData {

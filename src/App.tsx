@@ -8,7 +8,7 @@ import { lazy, Suspense } from 'react';
 import Loader from './components/loaders/Loader';
 import CreateEditQuestion from './components/question/CreateEditQuestion';
 import ViewQuestions from './components/question/ViewQuestions';
-import CustomSnackbar from './components/snackBar/Snackbar';
+import CustomSnackbar from './components/snackbar/Snackbar';
 
 const Home = lazy(() => import('./components/Home'));
 const Quiz = lazy(() => import('./components/Quiz'));
