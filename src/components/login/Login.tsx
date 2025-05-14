@@ -18,6 +18,7 @@ import {
 import useAuth from './hooks';
 import { useStyles } from './login.styles';
 import { useSnackbar } from '../snackBar/hooks';
+import { loginPayloadValidator } from '../../utils';
 
 interface LoginFormData {
   identifier: string;
@@ -40,42 +41,6 @@ const Login = ({ setIsLoginMode }: LoginProps) => {
   });
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  const validateAndGetPayload = (identifier: string, password: string) => {
-
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const numberPattern = /^\d+$/;
-    const usernamePattern = /^[a-zA-Z0-9_]+$/;
-
-    try {
-      if (!identifier || !password) {
-        throw new Error('Please fill in all fields.');
-      }
-
-      if (password.length < 6) {
-        throw new Error('Password must be at least 6 characters');
-      }
-
-      if (emailPattern.test(identifier)) {
-        return { email: identifier, password };
-      }
-
-      if (numberPattern.test(identifier)) {
-        if (identifier.length !== 10) {
-          throw new Error('Please enter a valid phone number.');
-        }
-        return { number: Number(identifier), password };
-      }
-
-      if (usernamePattern.test(identifier)) {
-        return { username: identifier, password };
-      }
-
-      throw new Error('Please enter a valid email, number, or username.');
-    } catch (error: any) {
-      setErrorSnack(error);
-    }
-  }
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -89,9 +54,13 @@ const Login = ({ setIsLoginMode }: LoginProps) => {
 
     setLoading(true);
     try {
-      const payload = validateAndGetPayload(formData.identifier, formData.password);
-      if (!payload) return;
-      await login(payload);
+      const validation = loginPayloadValidator(formData.identifier, formData.password)
+      if (!validation.isValid) {
+        setErrorSnack(validation.errorMessage || 'Invalid Credentials');
+        return;
+      }
+      if (!validation.payload) return;
+      login(validation.payload);
     } catch (error: any) {
       setErrorSnack(error.message);
     } finally {

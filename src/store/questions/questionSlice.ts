@@ -51,7 +51,18 @@ export const questionSlice = createSlice({
         removeQuestion: (state, action) => {
             state.questions = state.questions.filter((question: Question) => question._id !== action.payload.id);
             state.loading = false;
+        },
+        modifyQuestion: (state, action) => {
+            state.questions = state.questions.map((question: Question) => {
+                if (question._id === action.payload.question._id) {
+                    return action.payload.question;
+                }
+                return question;
+            });
+            state.loading = false;
+            state.currentQuestion = {};
         }
+
 
     }
 })
@@ -61,11 +72,13 @@ export const questionActions = {
     loadQuesRequest: createAction(`${questionSlice.name}/loadQuesRequest`, (payload) => { return { payload } }),
     createQuesRequest: createAction(`${questionSlice.name}/createQuesRequest`, (payload) => { return { payload } }),
     deleteQuesRequest: createAction(`${questionSlice.name}/deleteQuesRequest`, (payload) => { return { payload } }),
+    updateQuesRequest: createAction(`${questionSlice.name}/updateQuesRequest`, (payload) => { return { payload } }),
 
     setLoading: questionSlice.actions.setLoading,
     loadAllQuestions: questionSlice.actions.loadAllQuestions,
     loadCurrentQuestion: questionSlice.actions.loadCurrentQuestion,
-    removeQuestion: questionSlice.actions.removeQuestion
+    removeQuestion: questionSlice.actions.removeQuestion,
+    modifyQuestion: questionSlice.actions.modifyQuestion
 
 }
 

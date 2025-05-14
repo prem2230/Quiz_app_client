@@ -1,10 +1,11 @@
 import { Add, CheckCircle, CheckCircleOutline } from "@mui/icons-material";
 import { Box, Button, Container, Grid, InputAdornment, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useStyles } from "./question.styles";
 import useQuestion from "./hooks";
 import { useSnackbar } from "../snackBar/hooks";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { questionPayloadValidator } from "../../utils";
 
 interface QuestionData {
     question: string,
@@ -24,11 +25,13 @@ interface QuestionData {
     updatedAt?: string,
 }
 interface Question {
+    _id?: string,
     question: string,
     explanation: string,
     marks: number,
 }
 interface AnswerOption {
+    _id?: string
     text: string,
     isCorrect: boolean
 }
@@ -38,9 +41,10 @@ const MAX_EXPL_CHAR = 200;
 const MAX_OPT_CHAR = 100;
 
 const CreateEditQuestion = () => {
+    const { questionId } = useParams();
     const styles = useStyles();
     const { setErrorSnack } = useSnackbar();
-    const { createQuestion } = useQuestion();
+    const { createQuestion, updateQuestion, loadCurrentQuestion, currentQuestion } = useQuestion();
     const navigate = useNavigate();
     const [question, setQuestion] = useState<Question>({
         question: "",
@@ -55,6 +59,23 @@ const CreateEditQuestion = () => {
     ]);
     const [ansAdded, setAnsAdded] = useState(Array(options.length).fill({ add: false }));
 
+    useEffect(() => {
+        if (questionId) {
+            loadCurrentQuestion({ id: questionId });
+        }
+    }, [questionId])
+
+    useEffect(() => {
+        if (currentQuestion && 'options' in currentQuestion) {
+            setQuestion({
+                question: currentQuestion.question,
+                explanation: currentQuestion.explanation,
+                marks: currentQuestion.marks,
+            });
+            setOptions(currentQuestion.options);
+            setAnsAdded(Array(currentQuestion.options.length).fill({ add: true }));
+        }
+    }, [currentQuestion])
     const handleQuestion = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setQuestion((prev) => ({
@@ -82,13 +103,17 @@ const CreateEditQuestion = () => {
     }
 
     const handleRadio = (index: number) => {
-        setOptions((prev => {
-            const updated = [...prev];
-            updated.forEach((option, i) => {
-                option.isCorrect = i === index;
+        setOptions(prev => {
+            return prev.map((opt, i) => {
+                if (i === index) {
+                    return {
+                        ...opt,
+                        isCorrect: !opt.isCorrect
+                    };
+                }
+                return { ...opt }
             })
-            return updated;
-        }))
+        })
     }
 
     const handleAnsAdded = (index: number) => {
@@ -104,42 +129,6 @@ const CreateEditQuestion = () => {
         });
     }
 
-    const validatePayload = (data: QuestionData) => {
-        if (!data.question.length) {
-            setErrorSnack('Question is required');
-            return false;
-        }
-        if (data.question.length < 10) {
-            setErrorSnack('Question should be atleast 10 characters');
-            return false;
-        }
-        if (!data.explanation.length) {
-            setErrorSnack('Explanation is required');
-            return false;
-        }
-        if (data.explanation.length < 10) {
-            setErrorSnack('Explanation should be atleast 10 characters');
-            return false;
-        }
-        if (!data.marks) {
-            setErrorSnack('Marks is required');
-            return false;
-        }
-        if (data.marks > 10 || data.marks <= 0) {
-            setErrorSnack('Marks should be between 1 to 10');
-            return false;
-        }
-        if (data.options.length < 2) {
-            setErrorSnack('At least two options are required');
-            return false;
-        }
-        if (!data.options.some((opt) => opt.isCorrect)) {
-            setErrorSnack('At least one option should be correct');
-            return false;
-        }
-        return true;
-    }
-
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const data: QuestionData = {
@@ -149,18 +138,26 @@ const CreateEditQuestion = () => {
             options: options.filter((opt) => opt.text.length) as [{ _id?: string; text: string; isCorrect: boolean }],
         };
         try {
-            if (!validatePayload(data)) return;
-            await createQuestion(data);
-            navigate('/dashboard') // need to fix
+            const validation = questionPayloadValidator(data);
+            if (!validation.isValid) {
+                setErrorSnack(validation.errorMessage || 'Validation failed');
+                return
+            }
+            if (questionId) {
+                updateQuestion({ id: questionId, data });
+                navigate('/dashboard/view-questions') // need to fix
+            } else {
+                createQuestion(data);
+                navigate('/dashboard') // need to fix
+            }
         } catch (error: any) {
             setErrorSnack(error.message);
         }
-        console.log(data);
     }
 
     return (
         <Container >
-            <Typography variant="h4" fontWeight={600} textAlign={"center"}>Create Question</Typography>
+            <Typography variant="h4" fontWeight={600} textAlign={"center"}> {questionId ? `Edit` : `Create`} Question</Typography>
             <form onSubmit={handleSubmit}>
                 <Box sx={styles.commonBox}>
                     <Typography variant="h6" sx={styles.commonLabel}>Add Question</Typography>
@@ -189,6 +186,7 @@ const CreateEditQuestion = () => {
                                     {ansAdded[index].add && <TextField
                                         multiline
                                         rows={3}
+                                        value={opt.text || ''}
                                         onChange={(e) => handleChange(e, index)}
                                         InputProps={{
                                             endAdornment: (
@@ -242,11 +240,12 @@ const CreateEditQuestion = () => {
                             fullWidth
                             name="marks"
                             onChange={handleQuestion}
+                            value={question.marks || ''}
                             type="number"
                             sx={styles.commonTxtfield}
                         />
                     </Box>
-                    <Button type="submit" sx={{ ...styles.actionBtn, ...styles.createBtn }}>Create</Button>
+                    <Button type="submit" sx={{ ...styles.actionBtn, ...styles.createBtn }}>{questionId ? `Save` : `Create`}</Button>
                 </Box>
             </form>
         </Container >

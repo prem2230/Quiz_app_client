@@ -21,6 +21,10 @@ interface QuestionData {
     updatedAt?: string,
 }
 
+interface UpdateQuestionPayload {
+    id: string,
+    data: Partial<QuestionData>
+}
 interface QuestionIdPayload {
     id: string
 }
@@ -39,6 +43,9 @@ export const useQuestion = () => {
         }, [dispatch]),
         deleteQuestion: useCallback((payload: QuestionIdPayload) => {
             dispatch(questionActions.deleteQuesRequest(payload))
+        }, [dispatch]),
+        updateQuestion: useCallback((payload: UpdateQuestionPayload) => {
+            dispatch(questionActions.updateQuesRequest(payload))
         }, [dispatch]),
 
         loading: useAppSelector(Slice.selectQuesLoading),

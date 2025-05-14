@@ -3,10 +3,11 @@ import useQuestion from "./hooks";
 import { Box, Button, Container, Grid, Tooltip, Typography } from "@mui/material";
 import { useStyles } from "./question.styles";
 import { getTimestampInfo } from "../../utils";
+import { useNavigate } from "react-router-dom";
 
 const ViewQuestions = () => {
-
     const styles = useStyles();
+    const navigate = useNavigate();
     const { loadAllQuestions, questions, deleteQuestion } = useQuestion();
 
     useEffect(() => {
@@ -15,6 +16,10 @@ const ViewQuestions = () => {
 
     const handleDeleteQues = (id: string) => {
         deleteQuestion({ id })
+    }
+
+    const handleModifyQues = (id: string) => {
+        navigate(`/dashboard/edit-question/${id}`)
     }
 
     return (
@@ -33,7 +38,7 @@ const ViewQuestions = () => {
                                     <Typography sx={styles.marksTxt}>{question?.marks} Marks</Typography>
 
                                     <Box sx={styles.buttonDiv}>
-                                        <Button sx={{ ...styles.actionBtn, ...styles.modifyBtn }}>Modify</Button>
+                                        <Button onClick={() => handleModifyQues(question?._id)} sx={{ ...styles.actionBtn, ...styles.modifyBtn }}>Modify</Button>
                                         <Button onClick={() => handleDeleteQues(question?._id)} sx={{ ...styles.actionBtn, ...styles.deleteBtn }}>Delete</Button>
                                     </Box>
                                 </Box>

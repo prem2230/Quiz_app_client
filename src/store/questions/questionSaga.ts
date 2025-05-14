@@ -1,5 +1,5 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import { createQuestion, deleteQuestion, getAllQuestions, getQuestionById } from "./questionBaseApi";
+import { createQuestion, deleteQuestion, getAllQuestions, getQuestionById, updateQuestion } from "./questionBaseApi";
 import { questionActions } from "./questionSlice";
 import { snackbarActions } from "../snackbar/snackbarSlice";
 
@@ -20,6 +20,11 @@ interface QuestionData {
     updatedBy?: string,
     createdAt?: string,
     updatedAt?: string,
+}
+
+interface UpdateQuestionPayload {
+    id: string;
+    data: Partial<QuestionData>
 }
 
 interface QuestionResponse {
@@ -100,10 +105,27 @@ export function* deleteQuestionSaga(action: { payload: QuestionIdPayload }): Gen
     }
 }
 
+export function* updateQuestionSaga(action: { payload: UpdateQuestionPayload }): Generator<any, void, QuestionResponse> {
+    try {
+        const response = yield call(updateQuestion, action.payload);
+        if (response.success) {
+            yield put(questionActions.modifyQuestion(response));
+            yield put(snackbarActions.onSuccess(response));
+        } else {
+            yield put(snackbarActions.onError(response));
+        }
+    } catch (error) {
+        const errMsg = error instanceof Error ? error.message : 'An error occurred';
+        console.error('Failed to fetch', error);
+        yield put(snackbarActions.onError(errMsg));
+    }
+}
+
 
 export function* questionWatcherSaga() {
     yield takeEvery(questionActions.loadAllQuesRequest.type, loadAllQuestionSaga);
     yield takeEvery((questionActions.loadQuesRequest as any).type, loadQuestionSaga);
     yield takeEvery((questionActions.createQuesRequest as any).type, createQuestionSaga);
     yield takeEvery((questionActions.deleteQuesRequest as any).type, deleteQuestionSaga);
+    yield takeEvery((questionActions.updateQuesRequest as any).type, updateQuestionSaga);
 }

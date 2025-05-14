@@ -10,6 +10,8 @@ import {
     Stack,
     IconButton,
     InputAdornment,
+    ToggleButtonGroup,
+    ToggleButton,
 } from '@mui/material';
 import {
     LockOpen,
@@ -18,6 +20,7 @@ import {
 import useAuth from './hooks';
 import { useStyles } from './login.styles';
 import { useSnackbar } from '../snackBar/hooks';
+import { registerPayloadValidator } from '../../utils';
 
 interface RegisterFormData {
     email: string;
@@ -25,7 +28,7 @@ interface RegisterFormData {
     password: string;
     confirmPassword: string;
     role: 'admin' | 'user';
-    number?: number | null;
+    number: number | null;
 }
 
 interface LoginProps {
@@ -49,60 +52,12 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
         password: '',
         confirmPassword: '',
         role: 'user',
-        number: null,
+        number: null as number | null,
     });
     const [showPassword, setShowPassword] = useState<showPasswordProps>({
         password: false,
         confirmPassword: false,
     });
-
-    const validateAndGetPayload = (formData: RegisterFormData) => {
-
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const numberPattern = /^\d+$/;
-        const usernamePattern = /^[a-zA-Z0-9_]+$/;
-
-        try {
-            if (!formData?.username || !formData?.email || !formData?.number || !formData?.password || !formData?.confirmPassword) {
-                throw new Error('Please fill in all fields.');
-            }
-
-            if (formData?.password.length < 6) {
-                throw new Error('Password must be at least 6 characters');
-            }
-
-            if (!emailPattern.test(formData?.email)) {
-                throw new Error('Please enter a valid email address.');
-            }
-
-            if (formData?.number !== null) {
-                if (!numberPattern.test(String(formData?.number))) {
-                    throw new Error('Phone number must contain only digits.');
-                }
-                if (String(formData?.number).length !== 10) {
-                    throw new Error('Please enter a valid 10-digit phone number.');
-                }
-            }
-
-            if (!usernamePattern.test(formData?.username)) {
-                throw new Error('Username can only contain letters, numbers, and underscores.');
-            }
-
-            if (formData?.password !== formData?.confirmPassword) {
-                throw new Error('Passwords do not match.');
-            }
-
-            return {
-                email: formData?.email,
-                username: formData?.username,
-                password: formData?.password,
-                role: formData?.role,
-                number: formData?.number ? Number(formData?.number) : null,
-            }
-        } catch (error: any) {
-            setErrorSnack(error.message);
-        }
-    }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -118,9 +73,14 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
 
         setLoading(true);
         try {
-            const payload = validateAndGetPayload(formData);
-            if (!payload) return;
-            await register(payload);
+            const validation = registerPayloadValidator(formData);
+
+            if (!validation.isValid) {
+                setErrorSnack(validation.errorMessage || 'Invalid Registration Data');
+                return;
+            }
+            if (!validation.payload) return;
+            register(validation.payload);
         } catch (error: any) {
             setErrorSnack(error.message);
         } finally {
@@ -145,13 +105,13 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
 
     return (
         <Box sx={styles.formContainer}>
-            <Typography component="h1" variant="h5">
-                {'Create an Account ! '}
-            </Typography>
             <Paper
                 elevation={3}
                 sx={styles.formPaper}
             >
+                <Typography component="h1" variant="h5" my={3} textAlign={"center"}>
+                    {'Create an Account ! '}
+                </Typography>
                 <Box component="form" onSubmit={handleSubmit} noValidate>
                     <Stack spacing={3}>
                         <TextField
@@ -246,6 +206,42 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
                                 ),
                             }}
                         />
+                        <ToggleButtonGroup
+                            color="primary"
+                            value={formData?.role}
+                            exclusive
+                            onChange={(_e, newRole) => {
+                                if (newRole !== null) {
+                                    setFormData(prev => ({
+                                        ...prev,
+                                        role: newRole as 'user' | 'admin'
+                                    }));
+                                }
+                            }}
+                            aria-label="user role"
+                            sx={styles.toggleBox}
+                        >
+                            <ToggleButton
+                                value="user"
+                                disableRipple
+                                sx={{ ...styles.toggleBtn }}
+                            >
+                                User
+                            </ToggleButton>
+                            <ToggleButton
+                                value="admin"
+                                disableRipple
+                                sx={{ ...styles.toggleBtn }}
+                            >
+                                Admin
+                            </ToggleButton>
+                            <Box
+                                sx={{
+                                    ...styles.toggleActiveBox,
+                                    left: formData.role === 'user' ? '3px' : 'calc(50% - 3px)'
+                                }}
+                            />
+                        </ToggleButtonGroup>
 
                         <Button
                             type="submit"
