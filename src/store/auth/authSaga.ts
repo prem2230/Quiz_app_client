@@ -38,6 +38,7 @@ interface RegisterPayload {
 interface RegisterResponse {
     success: string;
     message: string;
+    user: User;
 }
 
 // Saga for handling login

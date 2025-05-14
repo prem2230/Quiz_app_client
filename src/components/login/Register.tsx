@@ -45,7 +45,7 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
 
     const styles = useStyles();
     const { setErrorSnack } = useSnackbar();
-    const { register, loading, setLoading } = useAuth();
+    const { register, loading, setLoading, lastRegistered } = useAuth();
     const [formData, setFormData] = useState<RegisterFormData>({
         email: '',
         username: '',
@@ -97,11 +97,12 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
         );
     }
 
-    // React.useEffect(() => {
-    //     if (success && !error) {
-    //         setIsLoginMode();
-    //     }
-    // }, [success, error]) // need to fix
+    React.useEffect(() => {
+        if (lastRegistered) {
+
+            setIsLoginMode();
+        }
+    }, [lastRegistered]) // need to fix
 
     return (
         <Box sx={styles.formContainer}>

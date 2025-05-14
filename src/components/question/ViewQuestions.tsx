@@ -4,11 +4,12 @@ import { Box, Button, Container, Grid, Tooltip, Typography } from "@mui/material
 import { useStyles } from "./question.styles";
 import { getTimestampInfo } from "../../utils";
 import { useNavigate } from "react-router-dom";
+import Loader from "../loaders/Loader";
 
 const ViewQuestions = () => {
     const styles = useStyles();
     const navigate = useNavigate();
-    const { loadAllQuestions, questions, deleteQuestion } = useQuestion();
+    const { loading, loadAllQuestions, questions, deleteQuestion } = useQuestion();
 
     useEffect(() => {
         loadAllQuestions();
@@ -20,6 +21,10 @@ const ViewQuestions = () => {
 
     const handleModifyQues = (id: string) => {
         navigate(`/dashboard/edit-question/${id}`)
+    }
+
+    if (loading) {
+        return <Loader />
     }
 
     return (

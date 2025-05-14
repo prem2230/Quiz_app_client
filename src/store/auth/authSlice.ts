@@ -19,11 +19,13 @@ interface AuthState {
     user: User | null;
     loading: boolean;
     token: string | null;
+    lastRegistered: User | null;
 }
 
 interface RegisterResponse {
     success: string;
     message: string;
+    user: User
 }
 
 const initialState: AuthState = {
@@ -31,6 +33,7 @@ const initialState: AuthState = {
     user: null,
     loading: false,
     token: null,
+    lastRegistered: null
 };
 
 export const authSlice = createSlice({
@@ -44,10 +47,12 @@ export const authSlice = createSlice({
             state.isAuthenticated = true;
             state.user = action.payload.user;
             state.token = action.payload.token;
+            state.lastRegistered = null;
             state.loading = false;
             localStorage.setItem('token', action.payload.token);
         },
-        registerSuccess: (state, _action: PayloadAction<RegisterResponse>) => {
+        registerSuccess: (state, action: PayloadAction<RegisterResponse>) => {
+            state.lastRegistered = action.payload.user;
             state.loading = false;
         },
         getUserSuccess: (state, action) => {
@@ -61,6 +66,9 @@ export const authSlice = createSlice({
             state.token = null;
             localStorage.removeItem('token');
         },
+        resetRegistered: (state) => {
+            state.lastRegistered = null;
+        }
     },
 })
 
@@ -77,6 +85,7 @@ export const authActions = {
     loginSuccess: authSlice.actions.loginSuccess,
     registerSuccess: authSlice.actions.registerSuccess,
     getUserSuccess: authSlice.actions.getUserSuccess,
+    resetRegistered: authSlice.actions.resetRegistered,
     logout: authSlice.actions.logout,
 }
 
@@ -84,5 +93,6 @@ export const selectUser = (state: { auth: AuthState }) => state.auth.user;
 export const selectIsAuthenticated = (state: { auth: AuthState }) => state.auth.isAuthenticated;
 export const selectAuthLoading = (state: { auth: AuthState }) => state.auth.loading;
 export const selectAuthToken = (state: { auth: AuthState }) => state.auth.token;
+export const selectLastRegistered = (state: { auth: AuthState }) => state.auth.lastRegistered;
 
 export default authSlice.reducer;

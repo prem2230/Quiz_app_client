@@ -34,6 +34,9 @@ export const useAuth = () => {
         getUser: useCallback(() => {
             dispatch(authActions.getUserRequest());
         }, [dispatch]),
+        resetRegistered: useCallback(() => {
+            dispatch(authActions.resetRegistered());
+        }, [dispatch]),
         logout: useCallback(() => {
             dispatch(authActions.logout());
         }, [dispatch]),
@@ -42,6 +45,7 @@ export const useAuth = () => {
         isAuthenticated: useAppSelector(Slice.selectIsAuthenticated),
         loading: useAppSelector(Slice.selectAuthLoading),
         token: useAppSelector(Slice.selectAuthToken),
+        lastRegistered: useAppSelector(Slice.selectLastRegistered),
     }
 }
 

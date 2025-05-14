@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Paper,
@@ -34,7 +34,7 @@ const Login = ({ setIsLoginMode }: LoginProps) => {
 
   const styles = useStyles();
   const { setErrorSnack } = useSnackbar();
-  const { login, loading, setLoading } = useAuth();
+  const { login, loading, setLoading, lastRegistered, resetRegistered } = useAuth();
   const [formData, setFormData] = useState<LoginFormData>({
     identifier: '',
     password: '',
@@ -48,6 +48,20 @@ const Login = ({ setIsLoginMode }: LoginProps) => {
       [name]: value,
     }));
   };
+
+  useEffect(() => {
+    if (lastRegistered) {
+      setFormData({
+        identifier: lastRegistered.email,
+        password: ''
+      })
+    }
+  }, [lastRegistered])
+
+  const toggleForm = () => {
+    resetRegistered();
+    setIsLoginMode();
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -146,7 +160,7 @@ const Login = ({ setIsLoginMode }: LoginProps) => {
 
             <Box>
               <Typography variant="body2" color="text.primary" fontSize={'0.8em'}>
-                Don't have an account? <Link onClick={() => setIsLoginMode()} variant="body2" sx={{ cursor: 'pointer' }} >Register here !</Link>
+                Don't have an account? <Link onClick={toggleForm} variant="body2" sx={{ cursor: 'pointer' }} >Register here !</Link>
               </Typography>
             </Box>
           </Stack>

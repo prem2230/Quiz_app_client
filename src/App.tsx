@@ -5,10 +5,10 @@ import Navbar from './components/navBar/Navbar';
 import useAuth from './components/login/hooks';
 import ProtectedRoute from './utils/ProtectedRoute';
 import { lazy, Suspense } from 'react';
-import Loader from './components/Loader';
+import Loader from './components/loaders/Loader';
 import CreateEditQuestion from './components/question/CreateEditQuestion';
 import ViewQuestions from './components/question/ViewQuestions';
-import CustomSnackbar from './components/snackBar/SnackBar';
+import CustomSnackbar from './components/snackBar/Snackbar';
 
 const Home = lazy(() => import('./components/Home'));
 const Quiz = lazy(() => import('./components/Quiz'));

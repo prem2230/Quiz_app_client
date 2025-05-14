@@ -46,6 +46,7 @@ interface QuestionIdPayload {
 
 export function* loadAllQuestionSaga(): Generator<any, void, QuestionsResponse> {
     try {
+        yield put(questionActions.setLoading(true));
         const response = yield call(getAllQuestions);
         if (response.success) {
             yield put(questionActions.loadAllQuestions(response));
@@ -56,6 +57,8 @@ export function* loadAllQuestionSaga(): Generator<any, void, QuestionsResponse> 
         const errMsg = error instanceof Error ? error.message : 'An error occurred';
         console.error('Failed to fetch', error);
         yield put(snackbarActions.onError(errMsg));
+    } finally {
+        yield put(questionActions.setLoading(false));
     }
 }
 
