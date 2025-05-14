@@ -74,13 +74,13 @@ const Login = ({ setIsLoginMode }: LoginProps) => {
 
   return (
     <Box sx={styles.formContainer}>
-      <Typography component="h1" variant="h5">
-        {'Ready to get started? '}
-      </Typography>
       <Paper
         elevation={3}
         sx={styles.formPaper}
       >
+        <Typography component="h1" variant="h5" my={3} textAlign={"center"}>
+          {'Ready to get started? '}
+        </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate>
           <Stack spacing={3}>
             <TextField
@@ -145,7 +145,7 @@ const Login = ({ setIsLoginMode }: LoginProps) => {
             </Button>
 
             <Box>
-              <Typography variant="body2" color="text.primary">
+              <Typography variant="body2" color="text.primary" fontSize={'0.8em'}>
                 Don't have an account? <Link onClick={() => setIsLoginMode()} variant="body2" sx={{ cursor: 'pointer' }} >Register here !</Link>
               </Typography>
             </Box>

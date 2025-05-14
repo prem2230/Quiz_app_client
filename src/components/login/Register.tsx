@@ -258,7 +258,7 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
                         </Button>
 
                         <Box>
-                            <Typography variant="body2" color="text.primary">
+                            <Typography variant="body2" color="text.primary" fontSize={'0.8em'}>
                                 Already have an account? <Link onClick={() => setIsLoginMode()} variant="body2" sx={{ cursor: 'pointer' }} >Login here !</Link>
                             </Typography>
                         </Box>
