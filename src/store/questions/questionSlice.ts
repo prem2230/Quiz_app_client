@@ -20,6 +20,7 @@ interface Question {
 
 interface QuestionState {
     loading: boolean,
+    saveLoading: boolean,
     questions: Question[] | [],
     currentQuestion: Question | {},
     noOfQuestions: null
@@ -27,6 +28,7 @@ interface QuestionState {
 
 const initialState: QuestionState = {
     loading: false,
+    saveLoading: false,
     questions: [],
     currentQuestion: {},
     noOfQuestions: null
@@ -39,18 +41,19 @@ export const questionSlice = createSlice({
         setLoading: (state, action) => {
             state.loading = action.payload;
         },
+        setSaveLoading: (state, action) => {
+            state.saveLoading = action.payload;
+        },
         loadAllQuestions: (state, action) => {
             state.questions = action.payload.questions;
-            state.loading = false;
             state.noOfQuestions = action.payload.noOfQuestions
         },
         loadCurrentQuestion: (state, action) => {
             state.currentQuestion = action.payload.question;
-            state.loading = false;
         },
         removeQuestion: (state, action) => {
             state.questions = state.questions.filter((question: Question) => question._id !== action.payload.id);
-            state.loading = false;
+            state.saveLoading = false;
         },
         modifyQuestion: (state, action) => {
             state.questions = state.questions.map((question: Question) => {
@@ -59,7 +62,7 @@ export const questionSlice = createSlice({
                 }
                 return question;
             });
-            state.loading = false;
+            state.saveLoading = false;
             state.currentQuestion = {};
         }
 
@@ -75,6 +78,7 @@ export const questionActions = {
     updateQuesRequest: createAction(`${questionSlice.name}/updateQuesRequest`, (payload) => { return { payload } }),
 
     setLoading: questionSlice.actions.setLoading,
+    setSaveLoading: questionSlice.actions.setSaveLoading,
     loadAllQuestions: questionSlice.actions.loadAllQuestions,
     loadCurrentQuestion: questionSlice.actions.loadCurrentQuestion,
     removeQuestion: questionSlice.actions.removeQuestion,
@@ -85,6 +89,7 @@ export const questionActions = {
 export const selectQuestions = (state: { question: QuestionState }) => state.question.questions;
 export const selectCurrentQuestion = (state: { question: QuestionState }) => state.question.currentQuestion;
 export const selectQuesLoading = (state: { question: QuestionState }) => state.question.loading;
+export const selectSaveLoading = (state: { question: QuestionState }) => state.question.saveLoading;
 export const selectNoOfQuestions = (state: { question: QuestionState }) => state.question.noOfQuestions;
 
 export default questionSlice.reducer;

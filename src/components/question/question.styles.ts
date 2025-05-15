@@ -33,6 +33,14 @@ export const useStyles = () => {
                 boxShadow: '0 10px 20px rgba(0,0,0,0.2)'
             },
         },
+        skeletonCardBox: {
+            width: {
+                xs: '100%',
+                sm: '220px',
+                md: '230px',
+                lg: '250px'
+            },
+        },
         innerBox: {
             background: theme.palette.secondary.light,
             p: {

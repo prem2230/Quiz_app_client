@@ -1,4 +1,4 @@
-import { call, put, takeEvery } from "redux-saga/effects";
+import { call, delay, put, takeEvery } from "redux-saga/effects";
 import { createQuestion, deleteQuestion, getAllQuestions, getQuestionById, updateQuestion } from "./questionBaseApi";
 import { questionActions } from "./questionSlice";
 import { snackbarActions } from "../snackbar/snackbarSlice";
@@ -22,9 +22,14 @@ interface QuestionData {
     updatedAt?: string,
 }
 
+interface CreateQuestionPayload {
+    data: QuestionData,
+    navigate: Function
+}
 interface UpdateQuestionPayload {
     id: string;
-    data: Partial<QuestionData>
+    data: Partial<QuestionData>,
+    navigate: Function
 }
 
 interface QuestionResponse {
@@ -64,6 +69,7 @@ export function* loadAllQuestionSaga(): Generator<any, void, QuestionsResponse> 
 
 export function* loadQuestionSaga(action: { payload: QuestionIdPayload }): Generator<any, void, QuestionResponse> {
     try {
+        yield put(questionActions.setLoading(true));
         const response = yield call(getQuestionById, action.payload);
         if (response.success) {
             yield put(questionActions.loadCurrentQuestion(response));
@@ -74,14 +80,21 @@ export function* loadQuestionSaga(action: { payload: QuestionIdPayload }): Gener
         const errMsg = error instanceof Error ? error.message : 'An error occurred';
         console.error('Failed to fetch', error);
         yield put(snackbarActions.onError(errMsg));
+    } finally {
+        yield put(questionActions.setLoading(false));
     }
 }
 
-export function* createQuestionSaga(action: { payload: QuestionData }): Generator<any, void, QuestionResponse> {
+export function* createQuestionSaga(action: { payload: CreateQuestionPayload }): Generator<any, void, QuestionResponse> {
     try {
-        const response = yield call(createQuestion, action.payload);
+        yield put(questionActions.setSaveLoading(true));
+        const { data, navigate } = action.payload;
+        yield put(questionActions.setSaveLoading(true));
+        const response = yield call(createQuestion, data);
         if (response.success) {
+            yield delay(1000);
             yield put(snackbarActions.onSuccess(response));
+            navigate('/dashboard');
         } else {
             yield put(snackbarActions.onError(response));
         }
@@ -89,11 +102,14 @@ export function* createQuestionSaga(action: { payload: QuestionData }): Generato
         const errMsg = error instanceof Error ? error.message : 'An error occurred';
         console.error('Failed to fetch', error);
         yield put(snackbarActions.onError(errMsg));
+    } finally {
+        yield put(questionActions.setSaveLoading(false));
     }
 }
 
 export function* deleteQuestionSaga(action: { payload: QuestionIdPayload }): Generator<any, void, QuestionResponse> {
     try {
+        yield put(questionActions.setSaveLoading(true));
         const response = yield call(deleteQuestion, action.payload);
         if (response.success) {
             yield put(questionActions.removeQuestion(response));
@@ -110,10 +126,14 @@ export function* deleteQuestionSaga(action: { payload: QuestionIdPayload }): Gen
 
 export function* updateQuestionSaga(action: { payload: UpdateQuestionPayload }): Generator<any, void, QuestionResponse> {
     try {
+        yield put(questionActions.setSaveLoading(true));
+        const { navigate } = action.payload;
         const response = yield call(updateQuestion, action.payload);
         if (response.success) {
+            yield delay(1000);
             yield put(questionActions.modifyQuestion(response));
             yield put(snackbarActions.onSuccess(response));
+            navigate('/dashboard/view-questions');
         } else {
             yield put(snackbarActions.onError(response));
         }

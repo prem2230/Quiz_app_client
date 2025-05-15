@@ -34,7 +34,7 @@ const Login = ({ setIsLoginMode }: LoginProps) => {
 
   const styles = useStyles();
   const { setErrorSnack } = useSnackbar();
-  const { login, loading, setLoading, lastRegistered, resetRegistered } = useAuth();
+  const { login, loading, lastRegistered, resetRegistered } = useAuth();
   const [formData, setFormData] = useState<LoginFormData>({
     identifier: '',
     password: '',
@@ -66,7 +66,6 @@ const Login = ({ setIsLoginMode }: LoginProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    setLoading(true);
     try {
       const validation = loginPayloadValidator(formData.identifier, formData.password)
       if (!validation.isValid) {
@@ -77,8 +76,6 @@ const Login = ({ setIsLoginMode }: LoginProps) => {
       login(validation.payload);
     } catch (error: any) {
       setErrorSnack(error.message);
-    } finally {
-      setLoading(false);
     }
   };
 

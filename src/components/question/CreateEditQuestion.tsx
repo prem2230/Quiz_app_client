@@ -6,6 +6,8 @@ import useQuestion from "./hooks";
 import { useSnackbar } from "../snackBar/hooks";
 import { useNavigate, useParams } from "react-router-dom";
 import { questionPayloadValidator } from "../../utils";
+import EditQuestionLoader from "../loaders/EditQuestionLoader";
+import AppLoader from "../loaders/AppLoader";
 
 interface QuestionData {
     question: string,
@@ -44,7 +46,7 @@ const CreateEditQuestion = () => {
     const { questionId } = useParams();
     const styles = useStyles();
     const { setErrorSnack } = useSnackbar();
-    const { createQuestion, updateQuestion, loadCurrentQuestion, currentQuestion } = useQuestion();
+    const { loading, saveLoading, createQuestion, updateQuestion, loadCurrentQuestion, currentQuestion } = useQuestion();
     const navigate = useNavigate();
     const [question, setQuestion] = useState<Question>({
         question: "",
@@ -144,11 +146,11 @@ const CreateEditQuestion = () => {
                 return
             }
             if (questionId) {
-                updateQuestion({ id: questionId, data });
-                navigate('/dashboard/view-questions') // need to fix
+                updateQuestion({ id: questionId, data: data, navigate });
+                // navigate('/dashboard/view-questions') // need to fix
             } else {
-                createQuestion(data);
-                navigate('/dashboard') // need to fix
+                createQuestion({ data: data, navigate });
+                // navigate('/dashboard') // need to fix
             }
         } catch (error: any) {
             setErrorSnack(error.message);
@@ -157,97 +159,101 @@ const CreateEditQuestion = () => {
 
     return (
         <Container >
+            {saveLoading && <AppLoader message={questionId ? 'Saving Question' : 'Creating Question'} />}
             <Typography variant="h4" fontWeight={600} textAlign={"center"}> {questionId ? `Edit` : `Create`} Question</Typography>
-            <form onSubmit={handleSubmit}>
-                <Box sx={styles.commonBox}>
-                    <Typography variant="h6" sx={styles.commonLabel}>Add Question</Typography>
-                    <TextField
-                        fullWidth
-                        placeholder="Enter your question"
-                        multiline
-                        name="question"
-                        value={question.question || ''}
-                        onChange={handleQuestion}
-                        rows={3}
-                        helperText={`${question.question.length}/${MAX_QUES_CHAR} characters`}
-                        FormHelperTextProps={{
-                            sx: { ...styles.helperFormProps(question?.question.length, MAX_QUES_CHAR) }
-                        }
-                        }
-                        sx={styles.commonTxtfield}
-                    />
-                </Box>
-                <Box sx={styles.commonBox}>
-                    <Typography variant="h6" sx={styles.commonLabel}>Add Answers</Typography>
-                    <Grid container spacing={2} mt={1} mb={2}>
-                        {options?.map((opt, index) => {
-                            return (
-                                <Grid sx={styles.optionGrid} size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={index}>
-                                    {ansAdded[index].add && <TextField
-                                        multiline
-                                        rows={3}
-                                        value={opt.text || ''}
-                                        onChange={(e) => handleChange(e, index)}
-                                        InputProps={{
-                                            endAdornment: (
-                                                <InputAdornment position="end" onClick={() => handleRadio(index)} sx={styles.inputIcon}>
-                                                    {opt?.isCorrect ? <CheckCircle sx={styles.checkFill} /> : <CheckCircleOutline />}
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                        helperText={`${opt.text.length}/${MAX_OPT_CHAR} char`}
-                                        FormHelperTextProps={{
-                                            sx: { ...styles.helperFormProps(opt.text.length, MAX_OPT_CHAR) }
-                                        }}
-                                        sx={styles.optionTxtfield}
-                                    />
-                                    }
-                                    {!ansAdded[index].add &&
-                                        <Box sx={styles.ansToggleBox}
-                                            onClick={() => handleAnsAdded(index)}>
-                                            <Add />
-                                            Add Answer
-                                        </Box>
-                                    }
-                                </Grid>
-                            )
-                        })}
-                    </Grid>
-                </Box>
-                <Box sx={styles.commonBox}>
-                    <Typography variant="h6" sx={styles.commonLabel}>Add Explanation</Typography>
-                    <TextField
-                        fullWidth
-                        placeholder="Enter your explanation"
-                        multiline
-                        name="explanation"
-                        value={question.explanation || ''}
-                        onChange={handleQuestion}
-                        rows={3}
-                        helperText={`${question.explanation.length}/${MAX_EXPL_CHAR} characters`}
-                        FormHelperTextProps={{
-                            sx: { ...styles.helperFormProps(question.explanation.length, MAX_EXPL_CHAR) }
-                        }}
-                        sx={styles.commonTxtfield}
-                    />
-                </Box>
-                <Box sx={styles.bottomBox}>
-                    <Box>
-                        <Typography variant="h6" sx={styles.commonLabel}>Add Marks</Typography>
+            {loading ? <EditQuestionLoader />
+                :
+                <form onSubmit={handleSubmit}>
+                    <Box sx={styles.commonBox}>
+                        <Typography variant="h6" sx={styles.commonLabel}>Add Question</Typography>
                         <TextField
-                            placeholder="Enter Marks"
-                            multiline
                             fullWidth
-                            name="marks"
+                            placeholder="Enter your question"
+                            multiline
+                            name="question"
+                            value={question.question || ''}
                             onChange={handleQuestion}
-                            value={question.marks || ''}
-                            type="number"
+                            rows={3}
+                            helperText={`${question.question.length}/${MAX_QUES_CHAR} characters`}
+                            FormHelperTextProps={{
+                                sx: { ...styles.helperFormProps(question?.question.length, MAX_QUES_CHAR) }
+                            }
+                            }
                             sx={styles.commonTxtfield}
                         />
                     </Box>
-                    <Button type="submit" sx={{ ...styles.actionBtn, ...styles.createBtn }}>{questionId ? `Save` : `Create`}</Button>
-                </Box>
-            </form>
+                    <Box sx={styles.commonBox}>
+                        <Typography variant="h6" sx={styles.commonLabel}>Add Answers</Typography>
+                        <Grid container spacing={2} mt={1} mb={2}>
+                            {options?.map((opt, index) => {
+                                return (
+                                    <Grid sx={styles.optionGrid} size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={index}>
+                                        {ansAdded[index].add && <TextField
+                                            multiline
+                                            rows={3}
+                                            value={opt.text || ''}
+                                            onChange={(e) => handleChange(e, index)}
+                                            InputProps={{
+                                                endAdornment: (
+                                                    <InputAdornment position="end" onClick={() => handleRadio(index)} sx={styles.inputIcon}>
+                                                        {opt?.isCorrect ? <CheckCircle sx={styles.checkFill} /> : <CheckCircleOutline />}
+                                                    </InputAdornment>
+                                                ),
+                                            }}
+                                            helperText={`${opt.text.length}/${MAX_OPT_CHAR} char`}
+                                            FormHelperTextProps={{
+                                                sx: { ...styles.helperFormProps(opt.text.length, MAX_OPT_CHAR) }
+                                            }}
+                                            sx={styles.optionTxtfield}
+                                        />
+                                        }
+                                        {!ansAdded[index].add &&
+                                            <Box sx={styles.ansToggleBox}
+                                                onClick={() => handleAnsAdded(index)}>
+                                                <Add />
+                                                Add Answer
+                                            </Box>
+                                        }
+                                    </Grid>
+                                )
+                            })}
+                        </Grid>
+                    </Box>
+                    <Box sx={styles.commonBox}>
+                        <Typography variant="h6" sx={styles.commonLabel}>Add Explanation</Typography>
+                        <TextField
+                            fullWidth
+                            placeholder="Enter your explanation"
+                            multiline
+                            name="explanation"
+                            value={question.explanation || ''}
+                            onChange={handleQuestion}
+                            rows={3}
+                            helperText={`${question.explanation.length}/${MAX_EXPL_CHAR} characters`}
+                            FormHelperTextProps={{
+                                sx: { ...styles.helperFormProps(question.explanation.length, MAX_EXPL_CHAR) }
+                            }}
+                            sx={styles.commonTxtfield}
+                        />
+                    </Box>
+                    <Box sx={styles.bottomBox}>
+                        <Box>
+                            <Typography variant="h6" sx={styles.commonLabel}>Add Marks</Typography>
+                            <TextField
+                                placeholder="Enter Marks"
+                                multiline
+                                fullWidth
+                                name="marks"
+                                onChange={handleQuestion}
+                                value={question.marks || ''}
+                                type="number"
+                                sx={styles.commonTxtfield}
+                            />
+                        </Box>
+                        <Button type="submit" sx={{ ...styles.actionBtn, ...styles.createBtn }}>{questionId ? `Save` : `Create`}</Button>
+                    </Box>
+                </form>
+            }
         </Container >
     )
 };

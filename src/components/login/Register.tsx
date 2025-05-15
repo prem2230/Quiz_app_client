@@ -45,7 +45,7 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
 
     const styles = useStyles();
     const { setErrorSnack } = useSnackbar();
-    const { register, loading, setLoading, lastRegistered } = useAuth();
+    const { register, loading, lastRegistered } = useAuth();
     const [formData, setFormData] = useState<RegisterFormData>({
         email: '',
         username: '',
@@ -71,7 +71,6 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        setLoading(true);
         try {
             const validation = registerPayloadValidator(formData);
 
@@ -83,8 +82,6 @@ const Register = ({ setIsLoginMode }: LoginProps) => {
             register(validation.payload);
         } catch (error: any) {
             setErrorSnack(error.message);
-        } finally {
-            setLoading(false);
         }
     };
 

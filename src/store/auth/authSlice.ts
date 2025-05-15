@@ -48,7 +48,6 @@ export const authSlice = createSlice({
             state.user = action.payload.user;
             state.token = action.payload.token;
             state.lastRegistered = null;
-            state.loading = false;
             localStorage.setItem('token', action.payload.token);
         },
         registerSuccess: (state, action: PayloadAction<RegisterResponse>) => {

@@ -21,13 +21,20 @@ interface QuestionData {
     updatedAt?: string,
 }
 
+interface CreateQuestionPayload {
+    data: QuestionData,
+    navigate: Function,
+}
+
 interface UpdateQuestionPayload {
     id: string,
-    data: Partial<QuestionData>
+    data: Partial<QuestionData>,
+    navigate: Function
 }
 interface QuestionIdPayload {
     id: string
 }
+
 export const useQuestion = () => {
     const dispatch = useAppDispatch();
 
@@ -38,7 +45,7 @@ export const useQuestion = () => {
         loadCurrentQuestion: useCallback((payload: QuestionIdPayload) => {
             dispatch(questionActions.loadQuesRequest(payload))
         }, [dispatch]),
-        createQuestion: useCallback((payload: QuestionData) => {
+        createQuestion: useCallback((payload: CreateQuestionPayload) => {
             dispatch(questionActions.createQuesRequest(payload))
         }, [dispatch]),
         deleteQuestion: useCallback((payload: QuestionIdPayload) => {
@@ -49,6 +56,7 @@ export const useQuestion = () => {
         }, [dispatch]),
 
         loading: useAppSelector(Slice.selectQuesLoading),
+        saveLoading: useAppSelector(Slice.selectSaveLoading),
         questions: useAppSelector(Slice.selectQuestions),
         currentQuestion: useAppSelector(Slice.selectCurrentQuestion),
         noOfQuestions: useAppSelector(Slice.selectNoOfQuestions),

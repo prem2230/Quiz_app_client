@@ -46,6 +46,7 @@ export function* loginUserSaga(
     action: PayloadAction<LoginPayload>
 ): Generator<any, void, LoginResponse> {
     try {
+        yield put(authActions.setLoading(true));
         const response = yield call(loginUser, action.payload);
         if (response.success) {
             yield put(authActions.loginSuccess(response));
@@ -57,6 +58,8 @@ export function* loginUserSaga(
         const errMsg = error instanceof Error ? error.message : 'An error occurred';
         yield put(snackbarActions.onError(errMsg || 'Something went wrong'))
         console.error("Login failed", error);
+    } finally {
+        yield put(authActions.setLoading(false));
     }
 }
 
@@ -64,6 +67,7 @@ export function* registerUserSaga(
     action: PayloadAction<RegisterPayload>
 ): Generator<any, void, RegisterResponse> {
     try {
+        yield put(authActions.setLoading(true));
         const response = yield call(registerUser, action.payload);
         if (response.success) {
             yield put(authActions.registerSuccess(response));
@@ -75,11 +79,14 @@ export function* registerUserSaga(
         const errMsg = error instanceof Error ? error.message : 'An error occurred';
         yield put(snackbarActions.onError(errMsg || 'Something went wrong'))
         console.error("Register failed", error);
+    } finally {
+        yield put(authActions.setLoading(false));
     }
 }
 
 export function* getUserSaga(): Generator<any, void, { success: boolean; message: string; }> {
     try {
+        yield put(authActions.setLoading(true));
         const response = yield call(getUser);
         if (response.success) {
             yield put(authActions.getUserSuccess(response));
@@ -92,6 +99,8 @@ export function* getUserSaga(): Generator<any, void, { success: boolean; message
         yield put(authActions.logout());
         yield put(snackbarActions.onError(errMsg || 'Something went wrong'))
         console.error("Get user failed", error);
+    } finally {
+        yield put(authActions.setLoading(false));
     }
 }
 
