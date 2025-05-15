@@ -1,7 +1,8 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import useAuth from "../components/login/hooks";
 import { Navigate, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import AppLoader from "../components/loaders/AppLoader";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -10,14 +11,32 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children, allowedRoles, redirectTo = "/" }: ProtectedRouteProps) => {
-  const { user, isAuthenticated, token, logout, getUser } = useAuth();
+  const { user, loading, isAuthenticated, token, logout, getUser } = useAuth();
   const location = useLocation();
   const localToken = localStorage.getItem("token");
+  const [isVerifying, setIsVerifying] = useState(true);
 
   useEffect(() => {
-    if (localToken && !isAuthenticated) {
-      getUser();
+    const verifyAuth = async () => {
+      if (localToken) {
+        try {
+          getUser();
+        } catch (error) {
+          console.error("Auth verification failed", error);
+        } finally {
+          setIsVerifying(false);
+        }
+      } else {
+        setIsVerifying(false);
+      }
     }
+
+    if (!isAuthenticated && localToken) {
+      verifyAuth();
+    } else {
+      setIsVerifying(false);
+    }
+
   }, [isAuthenticated, localToken]);
 
   useEffect(() => {
@@ -35,8 +54,12 @@ const ProtectedRoute = ({ children, allowedRoles, redirectTo = "/" }: ProtectedR
     }
   }, [token])
 
-  if (!localToken || !isAuthenticated || !token) {
-    return <Navigate to={"/"} state={{ from: location }} replace />;
+  if (isVerifying || loading) {
+    return <AppLoader message="Loading your profile" />;
+  }
+
+  if (!isVerifying && (!localToken || !isAuthenticated || !token)) {
+    return <Navigate to={"/"} state={{ from: location.pathname }} replace />;
   }
 
   if (allowedRoles && user && !allowedRoles.includes(user.role)) {

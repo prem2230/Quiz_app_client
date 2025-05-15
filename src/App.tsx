@@ -40,9 +40,11 @@ const Layout = () => {
   const isLoginPage = location.pathname === '/';
   const { user, isAuthenticated } = useAuth();
 
+  const shouldRedirect = isAuthenticated && isLoginPage;
+
   const getRedirectPath = () => {
     if (!user) return '/';
-    return user.role === 'admin' ? '/dashboard' : '/home';
+    return user.role === 'admin' ? '/dashboard' : '/home'
   }
 
   return (
@@ -51,7 +53,7 @@ const Layout = () => {
       {!isLoginPage && <Navbar />}
       <Box component="main" sx={{ flexGrow: 1, py: isLoginPage ? 0 : 3 }}>
         <Routes>
-          <Route path="/" element={isAuthenticated ? <Navigate to={getRedirectPath()} replace /> : <Suspense fallback={<Loader />}> <Login /> </Suspense>} />
+          <Route path="/" element={shouldRedirect ? <Navigate to={getRedirectPath()} replace /> : <Suspense fallback={<Loader />}> <Login /> </Suspense>} />
           <Route path="/dashboard" element={<ProtectedRoute allowedRoles={["admin"]}> <Suspense fallback={<Loader />}> <Dashboard /></Suspense></ProtectedRoute>}></Route>
           <Route path="/dashboard/create-question" element={<ProtectedRoute allowedRoles={["admin"]} > <Suspense fallback={<Loader />}> <CreateEditQuestion /></Suspense></ProtectedRoute>}></Route>
           <Route path="/dashboard/edit-question/:questionId" element={<ProtectedRoute allowedRoles={["admin"]} > <Suspense fallback={<Loader />}> <CreateEditQuestion /></Suspense></ProtectedRoute>}></Route>
