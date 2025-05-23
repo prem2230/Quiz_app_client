@@ -20,6 +20,14 @@ interface UpdateQuestionPayload {
     data: Partial<QuestionData>
 }
 
+interface PaginationParams {
+    page?: number,
+    limit?: number,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc',
+    search?: string,
+}
+
 export const GET_ALL_QUESTIONS = '/question/get-questions';
 export const GET_QUESTION_BY_ID = '/question/get-question/';
 export const CREATE_QUESTION = '/question/create-question';
@@ -28,7 +36,10 @@ export const DELETE_QUESTION = '/question/delete-question/';
 
 const api = callApi();
 
-export const getAllQuestions = async () => api.get(GET_ALL_QUESTIONS);
+export const getAllQuestions = async (payload: PaginationParams = {}) => {
+
+    return api.get(GET_ALL_QUESTIONS, { params: payload } as any);
+}
 
 export const getQuestionById = async (payload: QuestionIdPayload) => {
     return api.get(`${GET_QUESTION_BY_ID}${payload.id}`)

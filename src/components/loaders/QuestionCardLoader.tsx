@@ -10,7 +10,7 @@ const QuestionCardLoader = ({ value = 1 }) => {
                     return (
                         <Grid key={index} size={{ xs: 12, sm: 6, md: 4, lg: 3 }} sx={styles.cardGrid}>
                             <Box sx={styles.skeletonCardBox}>
-                                <Box sx={{ ...styles.innerBox, height: '30vh' }}>
+                                <Box sx={{ ...styles.innerBox, height: '27vh' }}>
                                     <Skeleton variant="text" width="100%" height={44} />
                                     <Skeleton variant="text" width="60%" height={40} />
                                     <Box sx={styles.buttonDiv}>

@@ -23,7 +23,13 @@ interface QuestionState {
     saveLoading: boolean,
     questions: Question[] | [],
     currentQuestion: Question | {},
-    noOfQuestions: null
+    noOfQuestions: null,
+    pagination: {
+        page: number,
+        pages: number,
+        total: number,
+        hasMore: boolean
+    }
 }
 
 const initialState: QuestionState = {
@@ -31,7 +37,13 @@ const initialState: QuestionState = {
     saveLoading: false,
     questions: [],
     currentQuestion: {},
-    noOfQuestions: null
+    noOfQuestions: null,
+    pagination: {
+        page: 0,
+        pages: 0,
+        total: 0,
+        hasMore: false
+    }
 }
 
 export const questionSlice = createSlice({
@@ -46,6 +58,7 @@ export const questionSlice = createSlice({
         },
         loadAllQuestions: (state, action) => {
             state.questions = action.payload.questions;
+            state.pagination = action.payload.pagination;
             state.noOfQuestions = action.payload.noOfQuestions
         },
         loadCurrentQuestion: (state, action) => {
@@ -71,7 +84,7 @@ export const questionSlice = createSlice({
 })
 
 export const questionActions = {
-    loadAllQuesRequest: createAction(`${questionSlice.name}/loadAllQuesRequest`),
+    loadAllQuesRequest: createAction(`${questionSlice.name}/loadAllQuesRequest`, (payload) => { return { payload } }),
     loadQuesRequest: createAction(`${questionSlice.name}/loadQuesRequest`, (payload) => { return { payload } }),
     createQuesRequest: createAction(`${questionSlice.name}/createQuesRequest`, (payload) => { return { payload } }),
     deleteQuesRequest: createAction(`${questionSlice.name}/deleteQuesRequest`, (payload) => { return { payload } }),
@@ -91,5 +104,6 @@ export const selectCurrentQuestion = (state: { question: QuestionState }) => sta
 export const selectQuesLoading = (state: { question: QuestionState }) => state.question.loading;
 export const selectSaveLoading = (state: { question: QuestionState }) => state.question.saveLoading;
 export const selectNoOfQuestions = (state: { question: QuestionState }) => state.question.noOfQuestions;
+export const selectPagination = (state: { question: QuestionState }) => state.question.pagination;
 
 export default questionSlice.reducer;

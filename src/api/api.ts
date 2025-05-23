@@ -1,7 +1,8 @@
-import { APPLICATION_NAME,BASE_URL } from './constants';
+import { APPLICATION_NAME, BASE_URL } from './constants';
 
 interface Config {
     headers?: Record<string, string>;
+    params?: Record<string, any>;
 }
 
 interface Api {
@@ -17,8 +18,8 @@ function getToken(): string | null {
 }
 
 function getHeaders(config: Config = {}, isFormData: boolean = false): Record<string, string> {
-    if(!config || !Object.keys(config).length) {
-        config = {headers: {}};
+    if (!config || !Object.keys(config).length) {
+        config = { headers: {} };
     }
 
     let headers = config.headers || {};
@@ -26,28 +27,42 @@ function getHeaders(config: Config = {}, isFormData: boolean = false): Record<st
 
     headers['X-Application'] = APPLICATION_NAME;
 
-    if(!isFormData){
+    if (!isFormData) {
         headers['Content-Type'] = 'application/json';
     }
 
-    if(token) {
+    if (token) {
         headers['Authorization'] = `Bearer ${token}`;
     }
 
     return headers;
 }
 
-export default function callApi() : Api {
+function appendQueryParams(url: string, params?: Record<string, any>): string {
+    if (!params) return url;
+    const searchParams = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+            searchParams.append(key, String(value));
+        }
+    });
+    const queryString = searchParams.toString();
+    return queryString ? `${url}${url.includes('?') ? '&' : '?'}${queryString}` : url;
+}
+
+export default function callApi(): Api {
     const api = {
         get: async <T>(url: string, config: Config = {}): Promise<T> => {
-            const response = await fetch(`${BASE_URL}${url}`, {
+            const finalUrl = appendQueryParams(`${BASE_URL}${url}`, config.params);
+            const response = await fetch(finalUrl, {
                 method: 'GET',
                 headers: getHeaders(config),
             });
             return response.json();
         },
         post: async <T>(url: string, data: any, config: Config = {}, isFormData: boolean = false): Promise<T> => {
-            const response = await fetch(`${BASE_URL}${url}`, {
+            const finalUrl = appendQueryParams(`${BASE_URL}${url}`, config.params);
+            const response = await fetch(finalUrl, {
                 method: 'POST',
                 headers: getHeaders(config, isFormData),
                 body: isFormData ? data : JSON.stringify(data),
@@ -55,7 +70,8 @@ export default function callApi() : Api {
             return response.json();
         },
         put: async <T>(url: string, data: any, config: Config = {}): Promise<T> => {
-            const response = await fetch(`${BASE_URL}${url}`, {
+            const finalUrl = appendQueryParams(`${BASE_URL}${url}`, config.params);
+            const response = await fetch(finalUrl, {
                 method: 'PUT',
                 headers: getHeaders(config),
                 body: JSON.stringify(data),
@@ -63,7 +79,8 @@ export default function callApi() : Api {
             return response.json();
         },
         delete: async <T>(url: string, config: Config = {}): Promise<T> => {
-            const response = await fetch(`${BASE_URL}${url}`, {
+            const finalUrl = appendQueryParams(`${BASE_URL}${url}`, config.params);
+            const response = await fetch(finalUrl, {
                 method: 'DELETE',
                 headers: getHeaders(config),
             });

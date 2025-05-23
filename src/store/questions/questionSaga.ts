@@ -22,6 +22,13 @@ interface QuestionData {
     updatedAt?: string,
 }
 
+interface PaginationParams {
+    page?: number,
+    limit?: number,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc',
+    search?: string,
+}
 interface CreateQuestionPayload {
     data: QuestionData,
     navigate: Function
@@ -49,10 +56,10 @@ interface QuestionIdPayload {
     id: string;
 }
 
-export function* loadAllQuestionSaga(): Generator<any, void, QuestionsResponse> {
+export function* loadAllQuestionSaga(action: { payload: PaginationParams }): Generator<any, void, QuestionsResponse> {
     try {
         yield put(questionActions.setLoading(true));
-        const response = yield call(getAllQuestions);
+        const response = yield call(getAllQuestions, action.payload);
         if (response.success) {
             yield put(questionActions.loadAllQuestions(response));
         } else {
@@ -146,7 +153,7 @@ export function* updateQuestionSaga(action: { payload: UpdateQuestionPayload }):
 
 
 export function* questionWatcherSaga() {
-    yield takeEvery(questionActions.loadAllQuesRequest.type, loadAllQuestionSaga);
+    yield takeEvery((questionActions.loadAllQuesRequest as any).type, loadAllQuestionSaga);
     yield takeEvery((questionActions.loadQuesRequest as any).type, loadQuestionSaga);
     yield takeEvery((questionActions.createQuesRequest as any).type, createQuestionSaga);
     yield takeEvery((questionActions.deleteQuesRequest as any).type, deleteQuestionSaga);

@@ -35,12 +35,20 @@ interface QuestionIdPayload {
     id: string
 }
 
+interface PaginationParams {
+    page?: number,
+    limit?: number,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc',
+    search?: string,
+}
+
 export const useQuestion = () => {
     const dispatch = useAppDispatch();
 
     return {
-        loadAllQuestions: useCallback(() => {
-            dispatch(questionActions.loadAllQuesRequest())
+        loadAllQuestions: useCallback((params?: PaginationParams) => {
+            dispatch(questionActions.loadAllQuesRequest(params || {}))
         }, [dispatch]),
         loadCurrentQuestion: useCallback((payload: QuestionIdPayload) => {
             dispatch(questionActions.loadQuesRequest(payload))
@@ -60,6 +68,7 @@ export const useQuestion = () => {
         questions: useAppSelector(Slice.selectQuestions),
         currentQuestion: useAppSelector(Slice.selectCurrentQuestion),
         noOfQuestions: useAppSelector(Slice.selectNoOfQuestions),
+        pagination: useAppSelector(Slice.selectPagination),
     }
 }
 

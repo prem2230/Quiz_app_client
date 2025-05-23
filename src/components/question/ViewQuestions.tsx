@@ -6,6 +6,8 @@ import { getTimestampInfo } from "../../utils";
 import { useNavigate } from "react-router-dom";
 import QuestionCardLoader from "../loaders/QuestionCardLoader";
 import AppLoader from "../loaders/AppLoader";
+import NoData from "../common/NoData";
+import Pagination from "../common/Pagination";
 
 const ViewQuestions = () => {
     const styles = useStyles();
@@ -22,6 +24,10 @@ const ViewQuestions = () => {
 
     const handleModifyQues = (id: string) => {
         navigate(`/dashboard/edit-question/${id}`)
+    }
+
+    if (!questions.length) {
+        return <NoData title="No Questions Found" buttonText="Create Question" redirectPath="/dashboard/create-question" />
     }
 
     return (
@@ -55,6 +61,7 @@ const ViewQuestions = () => {
 
                 </Grid>
             }
+            <Pagination />
         </Container >
     )
 }
