@@ -136,6 +136,8 @@ export function* deleteQuestionSaga(action: { payload: QuestionIdPayload }): Gen
         const errMsg = error instanceof Error ? error.message : 'An error occurred';
         console.error('Failed to fetch', error);
         yield put(snackbarActions.onError(errMsg));
+    } finally {
+        yield put(questionActions.setSaveLoading(false));
     }
 }
 
@@ -156,6 +158,8 @@ export function* updateQuestionSaga(action: { payload: UpdateQuestionPayload }):
         const errMsg = error instanceof Error ? error.message : 'An error occurred';
         console.error('Failed to fetch', error);
         yield put(snackbarActions.onError(errMsg));
+    } finally {
+        yield put(questionActions.setSaveLoading(false));
     }
 }
 

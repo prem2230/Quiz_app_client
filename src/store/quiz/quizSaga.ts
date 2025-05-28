@@ -149,6 +149,8 @@ export function* deleteQuizSaga(action: { payload: QuizIdPayload }): Generator<a
         const errMsg = error instanceof Error ? error.message : 'An error occurred';
         console.error('Failed to fetch', error);
         yield put(snackbarActions.onError(errMsg));
+    } finally {
+        yield put(quizActions.setSaveLoading(false));
     }
 }
 
@@ -169,6 +171,8 @@ export function* updateQuizSaga(action: { payload: UpdateQuizPayload }): Generat
         const errMsg = error instanceof Error ? error.message : 'An error occurred';
         console.error('Failed to fetch', error);
         yield put(snackbarActions.onError(errMsg));
+    } finally {
+        yield put(quizActions.setSaveLoading(false));
     }
 }
 

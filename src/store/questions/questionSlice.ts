@@ -85,7 +85,6 @@ export const questionSlice = createSlice({
         },
         removeQuestion: (state, action) => {
             state.questions = state.questions.filter((question: Question) => question._id !== action.payload.id);
-            state.saveLoading = false;
         },
         modifyQuestion: (state, action) => {
             state.questions = state.questions.map((question: Question) => {
@@ -94,7 +93,6 @@ export const questionSlice = createSlice({
                 }
                 return question;
             });
-            state.saveLoading = false;
             state.currentQuestion = {};
         }
 

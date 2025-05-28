@@ -78,7 +78,6 @@ export const quizSlice = createSlice({
         },
         removeQuiz: (state, action) => {
             state.quizzes = state.quizzes.filter((quiz: Quiz) => quiz._id !== action.payload.id);
-            state.saveLoading = false;
         },
         modifyQuiz: (state, action) => {
             state.quizzes = state.quizzes.map((quiz: Quiz) => {
@@ -87,7 +86,6 @@ export const quizSlice = createSlice({
                 }
                 return quiz;
             });
-            state.saveLoading = false;
             state.currentQuiz = {};
         }
     }
