@@ -27,7 +27,7 @@ const ViewQuizzes = () => {
         deleteQuiz({ id })
     }
 
-    if (!quizzes.length) {
+    if (!quizzes.length && !loading) {
         return <NoData title="No Quizzes Found" buttonText="Create Quiz" redirectPath="/dashboard/create-quiz" />
     }
 

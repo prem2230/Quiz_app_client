@@ -26,7 +26,7 @@ const ViewQuestions = () => {
         navigate(`/dashboard/edit-question/${id}`)
     }
 
-    if (!questions.length) {
+    if (!questions.length && !loading) {
         return <NoData title="No Questions Found" buttonText="Create Question" redirectPath="/dashboard/create-question" />
     }
 

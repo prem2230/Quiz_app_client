@@ -510,12 +510,13 @@ export const useStyles = () => {
             }
         },
         questionListContainer: {
-            minHeight: '40vh',
+            minHeight: '30vh',
             maxHeight: {
-                xs: '40vh',
-                sm: '50vh',
+                xs: 'calc(60vh - 120px)',
+                sm: '55vh',  // Increased height for tablets
                 md: '60vh'
             },
+            height: 'auto',
             border: 2,
             borderColor: theme.palette.secondary.light,
             borderRadius: {
