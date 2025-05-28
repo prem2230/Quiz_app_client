@@ -17,6 +17,32 @@ interface QuestionData {
 
 }
 
+interface Question {
+    question?: string,
+    _id: string,
+    options?: [
+        {
+            _id?: string
+            text: string,
+            isCorrect: boolean
+        }
+    ],
+    explanation?: string,
+    marks?: number,
+    createdBy?: string,
+    updatedBy?: string,
+    createdAt?: string,
+    updatedAt?: string,
+}
+interface Quiz {
+    _id?: string,
+    title: string,
+    description: string,
+    duration: number,
+    difficulty: 'easy' | 'medium' | 'hard',
+    questions: Question[],
+}
+
 interface LoginPayload {
     email?: string,
     username?: string,
@@ -95,6 +121,26 @@ export const getTimestampInfo = (createdAt: string, updatedAt: string): { prefix
         return { prefix: "Created", time: formatTimeAgo(createdAt) };
     }
 };
+
+//Validator for create-update quiz payload 
+export const quizPayloadValidator = (data: Quiz) => {
+    if (!data.title.length) {
+        return { isValid: false, errorMessage: 'Title is required' };
+    }
+    if (data.title.length < 5) {
+        return { isValid: false, errorMessage: 'Title should be at least 5 characters' };
+    }
+    if (!data.description.length) {
+        return { isValid: false, errorMessage: 'Description is required' };
+    }
+    if (data.description.length < 10) {
+        return { isValid: false, errorMessage: 'Description should be at least 10 characters' };
+    }
+    if (data.questions.length < 1) {
+        return { isValid: false, errorMessage: 'At least one question is required' };
+    }
+    return { isValid: true };
+}
 
 //Validator for create-update question payload
 export const questionPayloadValidator = (data: QuestionData) => {
@@ -202,5 +248,50 @@ export const registerPayloadValidator = (formData: RegisterFormData): { isValid:
             role: formData?.role,
             number: formData?.number ? Number(formData?.number) : null,
         }
+    }
+};
+
+// standard case helper function
+export const standardCase = (str: string) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+// helper function to get difficulty color
+export const getDifficultyStyle = (difficulty: string, styles: any) => {
+    switch (difficulty) {
+        case 'easy':
+            return styles.easy;
+        case 'medium':
+            return styles.medium;
+        case 'hard':
+            return styles.hard;
+        default:
+            return styles.easy;
+    }
+};
+
+// difficulty toggle helper function
+export const getActivePositionDifficulty = (difficulty: string) => {
+    switch (difficulty) {
+        case 'easy': return '3px';
+        case 'medium': return 'calc(33.33% - 0px)';
+        case 'hard': return 'calc(66.66% - 3px)';
+        default: return '3px';
+    }
+};
+
+// duration toggle helper function
+export const getActivePositionDuration = (duration: number) => {
+    switch (duration) {
+        case 30:
+            return '1.5%';
+        case 60:
+            return '26%';
+        case 90:
+            return '50.5%';
+        case 120:
+            return '75%';
+        default:
+            return '1.5%';
     }
 };

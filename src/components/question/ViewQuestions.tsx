@@ -61,7 +61,7 @@ const ViewQuestions = () => {
 
                 </Grid>
             }
-            <Pagination />
+            <Pagination module="question" />
         </Container >
     )
 }

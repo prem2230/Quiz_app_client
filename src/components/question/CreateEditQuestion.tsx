@@ -78,6 +78,7 @@ const CreateEditQuestion = () => {
             setAnsAdded(Array(currentQuestion.options.length).fill({ add: true }));
         }
     }, [currentQuestion])
+
     const handleQuestion = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setQuestion((prev) => ({
@@ -147,10 +148,8 @@ const CreateEditQuestion = () => {
             }
             if (questionId) {
                 updateQuestion({ id: questionId, data: data, navigate });
-                // navigate('/dashboard/view-questions') // need to fix
             } else {
                 createQuestion({ data: data, navigate });
-                // navigate('/dashboard') // need to fix
             }
         } catch (error: any) {
             setErrorSnack(error.message);

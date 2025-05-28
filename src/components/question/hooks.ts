@@ -62,10 +62,14 @@ export const useQuestion = () => {
         updateQuestion: useCallback((payload: UpdateQuestionPayload) => {
             dispatch(questionActions.updateQuesRequest(payload))
         }, [dispatch]),
+        setCachedQuestions: useCallback((payload: QuestionData[]) => {
+            dispatch(questionActions.setCachedQuestions(payload))
+        }, [dispatch]),
 
         loading: useAppSelector(Slice.selectQuesLoading),
         saveLoading: useAppSelector(Slice.selectSaveLoading),
         questions: useAppSelector(Slice.selectQuestions),
+        cachedQuestions: useAppSelector(Slice.selectCachedQuestions),
         currentQuestion: useAppSelector(Slice.selectCurrentQuestion),
         noOfQuestions: useAppSelector(Slice.selectNoOfQuestions),
         pagination: useAppSelector(Slice.selectPagination),

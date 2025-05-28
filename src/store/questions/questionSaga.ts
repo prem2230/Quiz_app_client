@@ -21,13 +21,32 @@ interface QuestionData {
     createdAt?: string,
     updatedAt?: string,
 }
-
+interface QuestionResponse {
+    success: string,
+    message: string,
+    question: QuestionData
+}
+interface QuestionsResponse {
+    success: string,
+    message: string,
+    data: QuestionData[],
+    noOfQUestion: number,
+    pagination: {
+        page: number,
+        pages: number,
+        total: number,
+        hasMore: boolean
+    }
+}
 interface PaginationParams {
     page?: number,
     limit?: number,
     sortBy?: string,
     sortOrder?: 'asc' | 'desc',
     search?: string,
+}
+interface QuestionIdPayload {
+    id: string;
 }
 interface CreateQuestionPayload {
     data: QuestionData,
@@ -39,29 +58,18 @@ interface UpdateQuestionPayload {
     navigate: Function
 }
 
-interface QuestionResponse {
-    success: string,
-    message: string,
-    question: QuestionData
-}
-
-interface QuestionsResponse {
-    success: string,
-    message: string,
-    data: QuestionData[],
-    noOfQUestion: number
-}
-
-interface QuestionIdPayload {
-    id: string;
-}
-
 export function* loadAllQuestionSaga(action: { payload: PaginationParams }): Generator<any, void, QuestionsResponse> {
     try {
-        yield put(questionActions.setLoading(true));
+        if (!action.payload.page || action.payload.page === 1) {
+            yield put(questionActions.setLoading(true));
+        }
+        // yield put(questionActions.setLoading(true));
         const response = yield call(getAllQuestions, action.payload);
         if (response.success) {
-            yield put(questionActions.loadAllQuestions(response));
+            yield put(questionActions.loadAllQuestions({
+                ...response,
+                isFirstPage: !action.payload.page || action.payload.page === 1,
+            }));
         } else {
             yield put(snackbarActions.onError(response));
         }

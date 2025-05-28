@@ -22,6 +22,7 @@ interface QuestionState {
     loading: boolean,
     saveLoading: boolean,
     questions: Question[] | [],
+    cachedQuestions: Question[] | [],
     currentQuestion: Question | {},
     noOfQuestions: null,
     pagination: {
@@ -36,6 +37,7 @@ const initialState: QuestionState = {
     loading: false,
     saveLoading: false,
     questions: [],
+    cachedQuestions: [],
     currentQuestion: {},
     noOfQuestions: null,
     pagination: {
@@ -56,10 +58,27 @@ export const questionSlice = createSlice({
         setSaveLoading: (state, action) => {
             state.saveLoading = action.payload;
         },
+        setCachedQuestions: (state, action) => {
+            state.cachedQuestions = action.payload;
+        },
         loadAllQuestions: (state, action) => {
-            state.questions = action.payload.questions;
-            state.pagination = action.payload.pagination;
-            state.noOfQuestions = action.payload.noOfQuestions
+            const { questions, pagination, noOfQuestion, isFirstPage } = action.payload;
+            if (isFirstPage) {
+                state.questions = questions || [];
+            } else {
+                state.questions = [...state.questions, ...(questions || [])];
+            }
+            if (questions && questions.length > 0) {
+                const existingQuestionsMap = new Map(
+                    state.cachedQuestions.map(question => [question._id, question])
+                );
+                questions.forEach((ques: any) => {
+                    existingQuestionsMap.set(ques._id, ques);
+                });
+                state.cachedQuestions = Array.from(existingQuestionsMap.values());
+            }
+            state.pagination = pagination;
+            state.noOfQuestions = noOfQuestion;
         },
         loadCurrentQuestion: (state, action) => {
             state.currentQuestion = action.payload.question;
@@ -92,6 +111,7 @@ export const questionActions = {
 
     setLoading: questionSlice.actions.setLoading,
     setSaveLoading: questionSlice.actions.setSaveLoading,
+    setCachedQuestions: questionSlice.actions.setCachedQuestions,
     loadAllQuestions: questionSlice.actions.loadAllQuestions,
     loadCurrentQuestion: questionSlice.actions.loadCurrentQuestion,
     removeQuestion: questionSlice.actions.removeQuestion,
@@ -100,6 +120,7 @@ export const questionActions = {
 }
 
 export const selectQuestions = (state: { question: QuestionState }) => state.question.questions;
+export const selectCachedQuestions = (state: { question: QuestionState }) => state.question.cachedQuestions;
 export const selectCurrentQuestion = (state: { question: QuestionState }) => state.question.currentQuestion;
 export const selectQuesLoading = (state: { question: QuestionState }) => state.question.loading;
 export const selectSaveLoading = (state: { question: QuestionState }) => state.question.saveLoading;
