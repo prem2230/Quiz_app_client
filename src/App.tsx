@@ -67,7 +67,7 @@ const Layout = () => {
           <Route path="/dashboard/edit-quiz/:quizId" element={<ProtectedRoute allowedRoles={["admin"]} > <Suspense fallback={<Loader />}> <CreateEditQuiz /></Suspense></ProtectedRoute>}></Route>
           <Route path="/dashboard/view-quizzes" element={<ProtectedRoute allowedRoles={["admin"]} > <Suspense fallback={<Loader />}> <ViewQuizzes /></Suspense></ProtectedRoute>}></Route>
           <Route path="/home" element={<ProtectedRoute> <Suspense fallback={<Loader />}> <Home /> </Suspense></ProtectedRoute>} />
-          <Route path="/quiz/:categoryId" element={<ProtectedRoute> <Suspense fallback={<Loader />}> <Quiz /> </Suspense></ProtectedRoute>} />
+          <Route path="/quiz/:quizId" element={<ProtectedRoute> <Suspense fallback={<Loader />}> <Quiz /> </Suspense></ProtectedRoute>} />
           <Route path="/results" element={<ProtectedRoute> <Suspense fallback={<Loader />}> <Results /> </Suspense> </ProtectedRoute>} />
           <Route path="*" element={<ProtectedRoute> <Suspense fallback={<Loader />}> <NotFound /> </Suspense> </ProtectedRoute>} />
         </Routes>

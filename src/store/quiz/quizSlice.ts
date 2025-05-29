@@ -24,6 +24,7 @@ interface Quiz {
     duration: number;
     difficulty: 'easy' | 'medium' | 'hard',
     questions: Question[];
+    totalMarks: number;
     createdBy: string,
     updatedBy: string,
     createdAt: string,

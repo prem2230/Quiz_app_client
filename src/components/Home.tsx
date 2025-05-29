@@ -1,39 +1,19 @@
-import { Container, Typography,  Card, CardContent,  Button, GridLegacy, Box, Stack, Chip } from '@mui/material';
+import { Container, Typography, Card, CardContent, Button, Box, Stack, Chip, Grid, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import quizData from '../data/quiz.json';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import QuizIcon from '@mui/icons-material/Quiz';
 import StarIcon from '@mui/icons-material/Star';
-
-interface Quiz {
-  id: string;
-  title: string;
-  description: string;
-  duration: number;
-  difficulty: string;
-  totalMarks: number;
-  questions: Array<{
-    id: number;
-    question: string;
-    options: Array<{
-      id: number;
-      text: string;
-    }>;
-    correctAnswer: number;
-  }>;
-}
+import { useQuiz } from './quiz/hooks';
 
 const Home = () => {
+  const theme = useTheme();
   const navigate = useNavigate();
-
-  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+  const { loadAllQuizzes, quizzes } = useQuiz();
 
   useEffect(() => {
-    // Convert the quizData.tests object to an array
-    const quizArray = Object.values(quizData?.tests);
-    setQuizzes(quizArray);
-  }, []);
+    loadAllQuizzes();
+  }, [])
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -53,51 +33,43 @@ const Home = () => {
       <Typography variant="h4" gutterBottom textAlign="center">
         Welcome to Tech Quiz
       </Typography>
-      <GridLegacy container spacing={2} alignItems="stretch">
+      <Grid container spacing={2} alignItems="stretch">
         {quizzes?.map((quiz) => (
-          <GridLegacy
-            item 
-            xs={12} 
-            sm={6} 
-            md={4}
-            lg={3} 
-            key={quiz.id}
-            sx={{ display: 'flex' }}
-          >
+          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={quiz._id} sx={{ display: 'flex' }}>
             <Card sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                 width: '100%',
-                transition: 'all 0.3s ease-in-out',
-                '&:hover': {
-                  transform: 'translateY(-8px)',
-                  boxShadow: (theme) => theme.shadows[8],
-                }
+              display: 'flex',
+              flexDirection: 'column',
+              width: '100%',
+              transition: 'all 0.3s ease-in-out',
+              '&:hover': {
+                transform: 'translateY(-8px)',
+                boxShadow: (theme) => theme.shadows[8],
+              }
             }}>
-              <CardContent 
-                sx={{ 
-                  flexGrow: 1, 
-                  p: 2, 
+              <CardContent
+                sx={{
+                  flexGrow: 1,
+                  p: 2,
                   display: 'flex',
                   flexDirection: 'column'
                 }}>
                 <Box sx={{ mb: 1 }}>
-                <Typography variant="h5" gutterBottom 
-                    sx={{ 
+                  <Typography variant="h5" gutterBottom
+                    sx={{
                       fontWeight: 'bold',
                       display: 'flex',
                       alignItems: 'flex-start',
                       minHeight: { xs: 'auto', sm: '3em' },
                     }}>
-                  {quiz.title}
-                </Typography>
+                    {quiz.title}
+                  </Typography>
                 </Box>
-                 <Box sx={{ mb: 1, flexGrow: 1 }}>
-                <Typography variant="body2" color="text.secondary">
-                  {quiz.description}
-                </Typography>
+                <Box sx={{ mb: 1, flexGrow: 1 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    {quiz.description}
+                  </Typography>
                 </Box>
-                 <Stack spacing={2}>
+                <Stack spacing={2}>
                   <Stack direction="row" spacing={1} alignItems="center">
                     <AccessTimeIcon fontSize="small" color="action" />
                     <Typography variant="body2">
@@ -120,9 +92,9 @@ const Home = () => {
                   </Stack>
                 </Stack>
               </CardContent>
-               <Box 
-                sx={{ 
-                  p: 1, 
+              <Box
+                sx={{
+                  p: 1,
                   backgroundColor: 'grey.50',
                   borderTop: 1,
                   borderColor: 'grey.200'
@@ -130,12 +102,12 @@ const Home = () => {
               >
                 <Stack spacing={2}>
                   <Stack direction="row" spacing={1}>
-                    <Chip 
+                    <Chip
                       label={quiz.difficulty.toUpperCase()}
                       color={getDifficultyColor(quiz.difficulty)}
                       size="small"
                     />
-                    <Chip 
+                    <Chip
                       label={`${quiz.questions.length} Questions`}
                       variant="outlined"
                       size="small"
@@ -145,14 +117,14 @@ const Home = () => {
                   <Button
                     variant="contained"
                     fullWidth
-                    onClick={() => navigate(`/quiz/${quiz.id}`)}
+                    onClick={() => navigate(`/quiz/${quiz._id}`)}
                     sx={{
                       textTransform: 'none',
                       py: 1,
                       borderRadius: 2,
-                      background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+                      background: theme.palette.primary.main,
                       '&:hover': {
-                        background: 'linear-gradient(45deg, #1976D2 30%, #1E88E5 90%)',
+                        background: theme.palette.secondary.main,
                       }
                     }}
                   >
@@ -161,9 +133,9 @@ const Home = () => {
                 </Stack>
               </Box>
             </Card>
-          </GridLegacy>
+          </Grid>
         ))}
-      </GridLegacy>
+      </Grid>
     </Container>
   );
 };
