@@ -8,10 +8,10 @@ import { lazy, Suspense } from 'react';
 import Loader from './components/loaders/Loader';
 import CustomSnackbar from './components/snackBar/SnackBar';
 
-const Home = lazy(() => import('./components/Home'));
-const Quiz = lazy(() => import('./components/Quiz'));
+const Home = lazy(() => import('./components/exam/Home'));
+const Quiz = lazy(() => import('./components/exam/Quiz'));
 const Dashboard = lazy(() => import('./components/dashboard/Dashboard'));
-const Results = lazy(() => import('./components/Results'));
+const Results = lazy(() => import('./components/exam/Results'));
 const NotFound = lazy(() => import('./components/NotFound'));
 const Login = lazy(() => import('./components/login/Main'));
 const CreateEditQuestion = lazy(() => import('./components/question/CreateEditQuestion'));

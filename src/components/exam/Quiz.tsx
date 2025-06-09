@@ -13,7 +13,7 @@ import {
   Chip,
 } from '@mui/material';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import { useQuiz } from './quiz/hooks';
+import { useQuiz } from '../quiz/hooks';
 
 interface Question {
   question?: string,
