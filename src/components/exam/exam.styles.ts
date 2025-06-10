@@ -21,8 +21,8 @@ export const useStyles = () => {
                 sm: 280,
                 md: 300
             },
-            height: {
-                xs: 220,
+            maxHeight: {
+                xs: 200,
                 sm: 200
             },
             borderRadius: {
@@ -35,12 +35,6 @@ export const useStyles = () => {
             '&:hover': {
                 transform: 'translateY(-8px)',
                 boxShadow: (theme) => theme.shadows[8],
-            }
-        },
-        titleBox: {
-            height: {
-                xs: 40,
-                sm: 45
             }
         },
         quizTitle: {
@@ -58,17 +52,16 @@ export const useStyles = () => {
         },
         descriptionBox: {
             height: {
-                xs: 50,
-                sm: 60
+                xs: 40,
+                sm: 40
             },
-            my: 1
         },
         quizDescription: {
             fontSize: {
                 xs: '0.75rem',
                 sm: '0.8rem'
             },
-            mt: 1,
+            my: 1,
             color: theme.palette.text.primary,
             overflow: 'hidden',
             textOverflow: 'ellipsis',
@@ -81,8 +74,7 @@ export const useStyles = () => {
             justifyContent: 'space-between',
             gap: 1,
             alignItems: 'center',
-            my: 1,
-            height: 30,
+            height: 20,
         },
         typography: {
             display: 'flex',
@@ -106,6 +98,7 @@ export const useStyles = () => {
             height: 25,
             display: 'flex',
             alignItems: 'center',
+            my: 1
         },
         difficultyBadge: {
             fontStyle: 'italic',
@@ -135,9 +128,7 @@ export const useStyles = () => {
             color: theme.palette.error.contrastText
         },
         btnBox: {
-            mt: 'auto', // This pushes the button to the bottom
-            pt: 1,
-            height: 30,
+            mt: 'auto',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center'

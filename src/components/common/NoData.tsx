@@ -8,13 +8,15 @@ interface NotFoundProps {
     message?: string;
     buttonText?: string;
     redirectPath?: string;
+    isExam?: boolean;
 }
 
 const NoData: React.FC<NotFoundProps> = ({
     title = "No Data Found",
     message = "The resource you are looking for does not exist.",
     buttonText = "",
-    redirectPath
+    redirectPath,
+    isExam = false
 }) => {
     const navigate = useNavigate();
 
@@ -43,13 +45,14 @@ const NoData: React.FC<NotFoundProps> = ({
                 {message}
             </Typography>
             <Box sx={{ display: 'flex', alignItems: "center", justifyContent: 'center', gap: 1 }}>
-                <Button
+                {!isExam && <Button
                     variant="contained"
                     color="primary"
                     onClick={() => navigate(-1)}
                 >
                     {`Go Back`}
                 </Button>
+                }
                 {buttonText && (
                     <Button
                         variant="outlined"
