@@ -10,10 +10,11 @@ import {
   Box,
   CircularProgress,
   Alert,
-  Chip,
+  useTheme,
 } from '@mui/material';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { useQuiz } from '../quiz/hooks';
+import { getDifficultyStyle, standardCase } from '../../utils';
+import { useStyles } from './exam.styles';
 
 interface Question {
   question?: string,
@@ -49,6 +50,8 @@ interface UserAnswer {
 }
 
 const Quiz = () => {
+  const theme = useTheme();
+  const styles = useStyles();
   const { quizId } = useParams();
   const navigate = useNavigate();
   const { loadCurrentQuiz, currentQuiz, loading: quizLoading } = useQuiz();
@@ -58,27 +61,23 @@ const Quiz = () => {
   const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
   const [timeLeft, setTimeLeft] = useState<number>(0);
 
-  // Load quiz data
   useEffect(() => {
     if (quizId) {
       loadCurrentQuiz({ id: quizId });
     }
   }, [quizId, loadCurrentQuiz]);
 
-  // Set quiz data when loaded
   useEffect(() => {
     if (currentQuiz && Object.keys(currentQuiz).length > 0) {
       setQuiz(currentQuiz as Quiz);
       setLoading(false);
 
-      // Initialize timer when quiz is loaded
       if ((currentQuiz as Quiz).duration) {
-        setTimeLeft((currentQuiz as Quiz).duration * 60); // Convert minutes to seconds
+        setTimeLeft((currentQuiz as Quiz).duration * 60);
       }
     }
   }, [currentQuiz]);
 
-  // Initialize user answers
   useEffect(() => {
     if (quiz && quiz.questions) {
       const initialAnswers = quiz.questions.map(question => ({
@@ -89,10 +88,9 @@ const Quiz = () => {
     }
   }, [quiz]);
 
-  // Timer implementation
   useEffect(() => {
     if (!timeLeft || timeLeft <= 0) {
-      if (quiz) { // Only submit if quiz is loaded
+      if (quiz) {
         handleSubmit();
       }
       return;
@@ -181,33 +179,42 @@ const Quiz = () => {
       <Paper elevation={3} sx={{ p: 3, mt: 1 }}>
         {/* Quiz Header */}
         <Box sx={{ mb: 1, display: { md: 'flex' }, justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography variant="h5" gutterBottom>
+          <Typography variant="h5" gutterBottom sx={{
+            fontStyle: 'italic',
+            fontWeight: 500,
+          }}>
             {quiz.title}
           </Typography>
           <Stack direction="row" spacing={1} alignItems="center">
-            <Chip
-              icon={<AccessTimeIcon />}
-              label={`Time Left: ${formatTime(timeLeft)}`}
-              color={timeLeft < 60 ? "error" : "default"}
-            />
-            <Chip
-              label={`${quiz.difficulty.toUpperCase()}`}
-              color={
-                quiz.difficulty === 'easy' ? 'success' :
-                  quiz.difficulty === 'medium' ? 'warning' : 'error'
-              }
-            />
+            <Box sx={{
+              backgroundColor: theme.palette.primary.main,
+              color: theme.palette.primary.contrastText,
+              px: 2,
+              fontWeight: 500,
+              fontStyle: 'italic',
+              borderRadius: 5
+            }}>
+              {formatTime(timeLeft) || '00:00'}
+            </Box>
+            <Box sx={{
+              backgroundColor: getDifficultyStyle(quiz.difficulty, styles),
+              color: theme.palette.secondary.contrastText,
+              px: 2,
+              fontWeight: 500,
+              fontStyle: 'italic',
+              borderRadius: 5
+            }}>
+              {standardCase(quiz.difficulty)}
+            </Box>
           </Stack>
         </Box>
 
-        {/* Progress Bar */}
         <LinearProgress
           variant="determinate"
           value={(currentQuestion / quiz.questions.length) * 100}
           sx={{ mb: 2 }}
         />
 
-        {/* Progress Info */}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
           <Typography variant="body2" color="text.secondary">
             Question {currentQuestion + 1} of {quiz.questions.length}
@@ -217,7 +224,6 @@ const Quiz = () => {
           </Typography>
         </Box>
 
-        {/* Question */}
         <Box sx={{ mb: 2 }}>
           <Typography variant="h6" gutterBottom>
             {quiz.questions[currentQuestion].question}
@@ -235,7 +241,7 @@ const Quiz = () => {
                   textTransform: 'none',
                   backgroundColor: currentAnswer === option._id ? 'primary.main' : 'transparent',
                   '&:hover': {
-                    backgroundColor: currentAnswer === option._id ? 'primary.dark' : 'primary.light',
+                    backgroundColor: currentAnswer === option._id ? 'primary.dark' : 'primary.main',
                     color: 'white'
                   }
                 }}
@@ -246,7 +252,6 @@ const Quiz = () => {
           </Stack>
         </Box>
 
-        {/* Navigation Buttons */}
         <Box sx={{
           display: 'flex',
           justifyContent: 'space-between',
