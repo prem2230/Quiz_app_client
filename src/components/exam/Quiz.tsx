@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   Container,
-  Paper,
   Typography,
   Button,
   Stack,
@@ -15,6 +14,11 @@ import {
 import { useQuiz } from '../quiz/hooks';
 import { getDifficultyStyle, standardCase } from '../../utils';
 import { useStyles } from './exam.styles';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+
 
 interface Question {
   question?: string,
@@ -175,142 +179,345 @@ const Quiz = () => {
   const allQuestionsAnswered = userAnswers.every(answer => answer.selectedOption !== null);
 
   return (
-    <Container>
-      <Paper elevation={3} sx={{ p: 3, mt: 1 }}>
-        {/* Quiz Header */}
-        <Box sx={{ mb: 1, display: { md: 'flex' }, justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography variant="h5" gutterBottom sx={{
+    <Container maxWidth="xl">
+      <Box sx={{
+        mb: 1,
+        background: theme.palette.secondary.light,
+        p: 2,
+        borderRadius: 5,
+        boxShadow: 3,
+        display: 'flex',
+        flexDirection: { xs: 'column', sm: 'row' },
+        justifyContent: 'space-between',
+        alignItems: { xs: 'flex-start', sm: 'center' },
+        gap: 2
+      }}>
+        <Typography
+          variant="h6"
+          sx={{
+            fontWeight: 600,
+            color: theme.palette.text.primary,
+            position: 'relative',
             fontStyle: 'italic',
-            fontWeight: 500,
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              bottom: -8,
+              left: 0,
+              width: 60,
+              height: 2,
+              borderRadius: 2,
+              backgroundColor: theme.palette.primary.main
+            }
+          }}
+        >
+          {standardCase(quiz.title)}
+        </Typography>
+
+        <Stack
+          direction="row"
+          spacing={2}
+          alignItems="center"
+          sx={{ flexWrap: 'wrap' }}
+        >
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            backgroundColor: 'rgba(255,255,255,0.2)',
+            backdropFilter: 'blur(10px)',
+            px: 2,
+            borderRadius: 10,
+            boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
           }}>
-            {quiz.title}
-          </Typography>
-          <Stack direction="row" spacing={1} alignItems="center">
-            <Box sx={{
-              backgroundColor: theme.palette.primary.main,
-              color: theme.palette.primary.contrastText,
-              px: 2,
-              fontWeight: 500,
-              fontStyle: 'italic',
-              borderRadius: 5
-            }}>
-              {formatTime(timeLeft) || '00:00'}
-            </Box>
-            <Box sx={{
-              backgroundColor: getDifficultyStyle(quiz.difficulty, styles),
-              color: theme.palette.secondary.contrastText,
-              px: 2,
-              fontWeight: 500,
-              fontStyle: 'italic',
-              borderRadius: 5
-            }}>
-              {standardCase(quiz.difficulty)}
-            </Box>
-          </Stack>
-        </Box>
+            <AccessTimeIcon sx={{ color: theme.palette.primary.main, fontSize: '0.875rem' }} />
+            <Typography
+              sx={{
+                fontSize: '0.875rem',
+                fontWeight: 600,
+                color: timeLeft < 60 ? theme.palette.error.main : theme.palette.text.primary
+              }}
+            >
+              {formatTime(timeLeft)}
+            </Typography>
+          </Box>
 
-        <LinearProgress
-          variant="determinate"
-          value={(currentQuestion / quiz.questions.length) * 100}
-          sx={{ mb: 2 }}
-        />
+          <Box sx={{
+            backgroundColor: getDifficultyStyle(quiz.difficulty, styles),
+            color: '#fff',
+            px: 2,
+            borderRadius: 10,
+            fontWeight: 600,
+            fontSize: '0.875rem',
+            fontStyle: 'italic',
+            letterSpacing: 1
+          }}>
+            {standardCase(quiz.difficulty)}
+          </Box>
+        </Stack>
+      </Box>
 
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-          <Typography variant="body2" color="text.secondary">
-            Question {currentQuestion + 1} of {quiz.questions.length}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {userAnswers.filter(answer => answer.selectedOption !== null).length} of {quiz.questions.length} answered
-          </Typography>
-        </Box>
-
-        <Box sx={{ mb: 2 }}>
-          <Typography variant="h6" gutterBottom>
-            {quiz.questions[currentQuestion].question}
-          </Typography>
-          <Stack spacing={2} sx={{ mt: 2 }}>
-            {quiz.questions[currentQuestion].options?.map((option) => (
-              <Button
-                key={option._id}
-                variant={currentAnswer === option._id ? "contained" : "outlined"}
-                onClick={() => handleAnswerSelect(option._id)}
-                fullWidth
-                sx={{
-                  justifyContent: 'flex-start',
-                  py: 1,
-                  textTransform: 'none',
-                  backgroundColor: currentAnswer === option._id ? 'primary.main' : 'transparent',
-                  '&:hover': {
-                    backgroundColor: currentAnswer === option._id ? 'primary.dark' : 'primary.main',
-                    color: 'white'
-                  }
-                }}
-              >
-                {option.text}
-              </Button>
-            ))}
-          </Stack>
-        </Box>
-
+      {/* Progress Bar */}
+      <Box sx={{ position: 'relative', mx: 2, mt: 2 }}>
         <Box sx={{
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'center'
+          // mt: 1,
+          px: 0.5
         }}>
-          <Button
-            variant="outlined"
-            onClick={handlePrevious}
-            disabled={isFirstQuestion}
-          >
-            Previous
-          </Button>
 
-          <Box>
-            {isLastQuestion ? (
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleSubmit}
-                disabled={!allQuestionsAnswered}
-              >
-                Submit Quiz
-              </Button>
-            ) : (
-              <Button
-                variant="contained"
-                onClick={handleNext}
-                disabled={currentAnswer === null}
-              >
-                Next
-              </Button>
-            )}
-          </Box>
+          <Typography sx={{
+            textAlign: 'center',
+            mb: 1,
+            fontSize: '0.875rem',
+          }}>
+            Question {currentQuestion + 1} of {quiz.questions.length}
+          </Typography>
+          <Typography variant="body2" sx={{
+            textAlign: 'center',
+            mb: 1,
+            fontSize: '0.875rem',
+          }}>
+            {userAnswers.filter(answer => answer.selectedOption !== null).length} answered
+          </Typography>
         </Box>
-        <Box sx={{ mt: 1, display: 'flex', justifyContent: 'center' }} >
-          <Stack direction="row" spacing={1} flexWrap="wrap">
-            {quiz.questions.map((_, index) => (
+        <LinearProgress
+          variant="determinate"
+          value={(currentQuestion / quiz.questions.length) * 100}
+          sx={{
+            height: 10,
+            borderRadius: 4,
+            backgroundColor: theme.palette.secondary.light,
+            // '& .MuiLinearProgress-bar': {
+            //   borderRadius: 4,
+            //   backgroundImage: `linear-gradient(90deg, ${theme.palette.primary.light}, ${theme.palette.primary.main})`
+            // }
+          }}
+        />
+      </Box>
+
+      <Box sx={{
+        my: 2,
+        backgroundColor: theme.palette.secondary.light,
+        backdropFilter: 'blur(10px)',
+        borderRadius: 3,
+        p: 3,
+        boxShadow: '0 4px 20px rgba(0,0,0,0.06)'
+      }}>
+        <Typography
+          variant="h6"
+          gutterBottom
+          sx={{
+            fontWeight: 600,
+            color: theme.palette.text.primary,
+            mb: 3,
+          }}
+        >
+          {quiz.questions[currentQuestion].question}
+        </Typography>
+
+        <Stack spacing={2} sx={{ mt: 3 }}>
+          {quiz.questions[currentQuestion].options?.map((option) => (
+            <Button
+              key={option._id}
+              onClick={() => handleAnswerSelect(option._id)}
+              fullWidth
+              sx={{
+                justifyContent: 'flex-start',
+                py: 1.5,
+                px: 2.5,
+                textTransform: 'none',
+                borderRadius: 2,
+                fontWeight: 500,
+                fontSize: '1rem',
+                textAlign: 'left',
+                transition: 'all 0.2s ease',
+                backgroundColor: currentAnswer === option._id
+                  ? theme.palette.primary.main
+                  : theme.palette.text.secondary,
+                color: currentAnswer === option._id
+                  ? '#fff'
+                  : theme.palette.text.primary,
+                border: currentAnswer === option._id
+                  ? 'none'
+                  : '1px solid rgba(0,0,0,0.1)',
+                boxShadow: currentAnswer === option._id
+                  ? `0 4px 12px ${theme.palette.primary.main}80`
+                  : 'none',
+                '&:hover': {
+                  backgroundColor: currentAnswer === option._id
+                    ? theme.palette.primary.dark
+                    : theme.palette.secondary.main,
+                  color: theme.palette.text.secondary,
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 6px 15px rgba(0,0,0,0.1)'
+                }
+              }}
+            >
+              {option.text}
+            </Button>
+          ))}
+        </Stack>
+      </Box>
+
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: 2
+      }}>
+        <Button
+          variant="outlined"
+          onClick={handlePrevious}
+          disabled={isFirstQuestion}
+          startIcon={<ArrowBackIcon />}
+          sx={{
+            borderRadius: 10,
+            px: 3,
+            py: 1,
+            fontWeight: 600,
+            border: theme.palette.secondary.main,
+            color: theme.palette.text.secondary,
+            background: theme.palette.primary.main,
+            '&:hover': {
+              backgroundColor: theme.palette.primary.dark,
+              boxShadow: 10,
+            },
+            '&.Mui-disabled': {
+              opacity: 0.5,
+              border: theme.palette.secondary.main,
+              background: theme.palette.secondary.light,
+              color: theme.palette.text.primary
+            }
+          }}
+        >
+          Prev
+        </Button>
+
+        {isLastQuestion ? (
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            disabled={!allQuestionsAnswered}
+            endIcon={<CheckCircleIcon />}
+            sx={{
+              borderRadius: 10,
+              px: 3,
+              py: 1,
+              fontWeight: 600,
+              border: theme.palette.secondary.main,
+              color: theme.palette.text.secondary,
+              background: theme.palette.success.light,
+              '&:hover': {
+                backgroundColor: theme.palette.success.dark,
+                boxShadow: 10,
+              },
+              '&.Mui-disabled': {
+                opacity: 0.5,
+                border: theme.palette.secondary.main,
+                background: theme.palette.secondary.light,
+                color: theme.palette.text.primary
+              }
+            }}
+          >
+            Submit Quiz
+          </Button>
+        ) : (
+          <Button
+            variant="contained"
+            onClick={handleNext}
+            disabled={currentAnswer === null}
+            endIcon={<ArrowForwardIcon />}
+            sx={{
+              borderRadius: 10,
+              px: 3,
+              py: 1,
+              fontWeight: 600,
+              border: theme.palette.secondary.main,
+              color: theme.palette.text.secondary,
+              background: theme.palette.primary.main,
+              '&:hover': {
+                backgroundColor: theme.palette.primary.dark,
+                boxShadow: 10,
+              },
+              '&.Mui-disabled': {
+                opacity: 0.5,
+                border: theme.palette.secondary.main,
+                background: theme.palette.secondary.light,
+                color: theme.palette.text.primary
+              }
+            }}
+          >
+            Next
+          </Button>
+        )}
+      </Box>
+
+      <Box sx={{
+        mt: 4,
+        pt: 3,
+        borderTop: '1px solid rgba(0,0,0,0.08)',
+        display: 'flex',
+        justifyContent: 'center'
+      }}>
+        <Box sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 1,
+          justifyContent: 'center',
+          maxWidth: '100%'
+        }}>
+          {quiz.questions.map((_, index) => {
+            const isAnswered = userAnswers[index]?.selectedOption !== null;
+            const isCurrent = currentQuestion === index;
+
+            return (
               <Button
                 key={index}
-                variant={currentQuestion === index ? "contained" : "outlined"}
-                size="small"
                 onClick={() => setCurrentQuestion(index)}
                 sx={{
                   minWidth: '40px',
                   height: '40px',
-                  m: 0.5,
-                  color: userAnswers[index]?.selectedOption !== null ? 'white' : '',
-                  backgroundColor: userAnswers[index]?.selectedOption !== null
-                    ? (currentQuestion === index ? 'primary.main' : 'success.light')
-                    : (currentQuestion === index ? 'primary.main' : undefined)
+                  borderRadius: '50%',
+                  p: 0,
+                  fontWeight: 600,
+                  color: isCurrent
+                    ? '#fff'
+                    : isAnswered
+                      ? theme.palette.success.main
+                      : theme.palette.text.primary,
+                  backgroundColor: isCurrent
+                    ? theme.palette.primary.main
+                    : isAnswered
+                      ? 'rgba(76, 175, 80, 0.1)'
+                      : 'rgba(255,255,255,0.8)',
+                  border: isAnswered && !isCurrent
+                    ? `2px solid ${theme.palette.success.main}`
+                    : isCurrent
+                      ? 'none'
+                      : '1px solid rgba(0,0,0,0.1)',
+                  boxShadow: isCurrent
+                    ? `0 4px 10px ${theme.palette.primary.main}80`
+                    : 'none',
+                  '&:hover': {
+                    backgroundColor: isCurrent
+                      ? theme.palette.primary.dark
+                      : isAnswered
+                        ? 'rgba(76, 175, 80, 0.2)'
+                        : 'rgba(255,255,255,0.9)',
+                    transform: 'translateY(-2px)',
+                  }
                 }}
               >
                 {index + 1}
               </Button>
-            ))}
-          </Stack>
+            );
+          })}
         </Box>
-      </Paper>
-    </Container>
+      </Box>
+    </Container >
+
   );
 };
 
