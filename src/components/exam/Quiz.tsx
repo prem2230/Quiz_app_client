@@ -9,7 +9,6 @@ import {
   Box,
   CircularProgress,
   Alert,
-  useTheme,
 } from '@mui/material';
 import { useQuiz } from '../quiz/hooks';
 import { getDifficultyStyle, standardCase } from '../../utils';
@@ -54,7 +53,6 @@ interface UserAnswer {
 }
 
 const Quiz = () => {
-  const theme = useTheme();
   const styles = useStyles();
   const { quizId } = useParams();
   const navigate = useNavigate();
@@ -180,63 +178,15 @@ const Quiz = () => {
 
   return (
     <Container maxWidth="xl">
-      <Box sx={{
-        mb: 1,
-        background: theme.palette.secondary.light,
-        p: 2,
-        borderRadius: 5,
-        boxShadow: 3,
-        display: 'flex',
-        flexDirection: { xs: 'column', sm: 'row' },
-        justifyContent: 'space-between',
-        alignItems: { xs: 'flex-start', sm: 'center' },
-        gap: 2
-      }}>
-        <Typography
-          variant="h6"
-          sx={{
-            fontWeight: 600,
-            color: theme.palette.text.primary,
-            position: 'relative',
-            fontStyle: 'italic',
-            '&::after': {
-              content: '""',
-              position: 'absolute',
-              bottom: -8,
-              left: 0,
-              width: 60,
-              height: 2,
-              borderRadius: 2,
-              backgroundColor: theme.palette.primary.main
-            }
-          }}
-        >
+      <Box sx={styles.examContainer}>
+        <Typography variant="h6" sx={styles.examTitle}>
           {standardCase(quiz.title)}
         </Typography>
-
-        <Stack
-          direction="row"
-          spacing={2}
-          alignItems="center"
-          sx={{ flexWrap: 'wrap' }}
-        >
-          <Box sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1,
-            backgroundColor: 'rgba(255,255,255,0.2)',
-            backdropFilter: 'blur(10px)',
-            px: 2,
-            borderRadius: 10,
-            boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
-          }}>
-            <AccessTimeIcon sx={{ color: theme.palette.primary.main, fontSize: '0.875rem' }} />
+        <Stack direction="row" spacing={2} alignItems="center" sx={styles.headerStack}>
+          <Box sx={styles.timerBox}>
+            <AccessTimeIcon sx={styles.timerIcon} />
             <Typography
-              sx={{
-                fontSize: '0.875rem',
-                fontWeight: 600,
-                color: timeLeft < 60 ? theme.palette.error.main : theme.palette.text.primary
-              }}
+              sx={styles.timerText(timeLeft)}
             >
               {formatTime(timeLeft)}
             </Typography>
@@ -244,74 +194,35 @@ const Quiz = () => {
 
           <Box sx={{
             backgroundColor: getDifficultyStyle(quiz.difficulty, styles),
-            color: '#fff',
-            px: 2,
-            borderRadius: 10,
-            fontWeight: 600,
-            fontSize: '0.875rem',
-            fontStyle: 'italic',
-            letterSpacing: 1
+            ...styles.examDifficulty
           }}>
             {standardCase(quiz.difficulty)}
           </Box>
         </Stack>
       </Box>
 
-      {/* Progress Bar */}
-      <Box sx={{ position: 'relative', mx: 2, mt: 2 }}>
-        <Box sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          // mt: 1,
-          px: 0.5
-        }}>
+      <Box sx={styles.progressBox}>
+        <Box sx={styles.progressDetails}>
 
-          <Typography sx={{
-            textAlign: 'center',
-            mb: 1,
-            fontSize: '0.875rem',
-          }}>
+          <Typography sx={styles.progressTypography}>
             Question {currentQuestion + 1} of {quiz.questions.length}
           </Typography>
-          <Typography variant="body2" sx={{
-            textAlign: 'center',
-            mb: 1,
-            fontSize: '0.875rem',
-          }}>
+          <Typography variant="body2" sx={styles.progressTypography}>
             {userAnswers.filter(answer => answer.selectedOption !== null).length} answered
           </Typography>
         </Box>
         <LinearProgress
           variant="determinate"
           value={(currentQuestion / quiz.questions.length) * 100}
-          sx={{
-            height: 10,
-            borderRadius: 4,
-            backgroundColor: theme.palette.secondary.light,
-            // '& .MuiLinearProgress-bar': {
-            //   borderRadius: 4,
-            //   backgroundImage: `linear-gradient(90deg, ${theme.palette.primary.light}, ${theme.palette.primary.main})`
-            // }
-          }}
+          sx={styles.progressBar}
         />
       </Box>
 
-      <Box sx={{
-        my: 2,
-        backgroundColor: theme.palette.secondary.light,
-        backdropFilter: 'blur(10px)',
-        borderRadius: 3,
-        p: 3,
-        boxShadow: '0 4px 20px rgba(0,0,0,0.06)'
-      }}>
+      <Box sx={styles.questionContainer}>
         <Typography
           variant="h6"
           gutterBottom
-          sx={{
-            fontWeight: 600,
-            color: theme.palette.text.primary,
-            mb: 3,
-          }}
+          sx={styles.questionText}
         >
           {quiz.questions[currentQuestion].question}
         </Typography>
@@ -322,37 +233,7 @@ const Quiz = () => {
               key={option._id}
               onClick={() => handleAnswerSelect(option._id)}
               fullWidth
-              sx={{
-                justifyContent: 'flex-start',
-                py: 1.5,
-                px: 2.5,
-                textTransform: 'none',
-                borderRadius: 2,
-                fontWeight: 500,
-                fontSize: '1rem',
-                textAlign: 'left',
-                transition: 'all 0.2s ease',
-                backgroundColor: currentAnswer === option._id
-                  ? theme.palette.primary.main
-                  : theme.palette.text.secondary,
-                color: currentAnswer === option._id
-                  ? '#fff'
-                  : theme.palette.text.primary,
-                border: currentAnswer === option._id
-                  ? 'none'
-                  : '1px solid rgba(0,0,0,0.1)',
-                boxShadow: currentAnswer === option._id
-                  ? `0 4px 12px ${theme.palette.primary.main}80`
-                  : 'none',
-                '&:hover': {
-                  backgroundColor: currentAnswer === option._id
-                    ? theme.palette.primary.dark
-                    : theme.palette.secondary.main,
-                  color: theme.palette.text.secondary,
-                  transform: 'translateY(-2px)',
-                  boxShadow: '0 6px 15px rgba(0,0,0,0.1)'
-                }
-              }}
+              sx={styles.answerOptions(currentAnswer, option)}
             >
               {option.text}
             </Button>
@@ -360,37 +241,13 @@ const Quiz = () => {
         </Stack>
       </Box>
 
-      <Box sx={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        gap: 2
-      }}>
+      <Box sx={styles.buttonContainer}>
         <Button
           variant="outlined"
           onClick={handlePrevious}
           disabled={isFirstQuestion}
           startIcon={<ArrowBackIcon />}
-          sx={{
-            borderRadius: 10,
-            px: 3,
-            py: 1,
-            fontWeight: 600,
-            border: theme.palette.secondary.main,
-            color: theme.palette.text.secondary,
-            background: theme.palette.primary.main,
-            '&:hover': {
-              backgroundColor: theme.palette.primary.dark,
-              boxShadow: 10,
-            },
-            '&.Mui-disabled': {
-              opacity: 0.5,
-              border: theme.palette.secondary.main,
-              background: theme.palette.secondary.light,
-              color: theme.palette.text.primary
-            }
-          }}
+          sx={{ ...styles.button, ...styles.prevNextButton }}
         >
           Prev
         </Button>
@@ -401,25 +258,7 @@ const Quiz = () => {
             onClick={handleSubmit}
             disabled={!allQuestionsAnswered}
             endIcon={<CheckCircleIcon />}
-            sx={{
-              borderRadius: 10,
-              px: 3,
-              py: 1,
-              fontWeight: 600,
-              border: theme.palette.secondary.main,
-              color: theme.palette.text.secondary,
-              background: theme.palette.success.light,
-              '&:hover': {
-                backgroundColor: theme.palette.success.dark,
-                boxShadow: 10,
-              },
-              '&.Mui-disabled': {
-                opacity: 0.5,
-                border: theme.palette.secondary.main,
-                background: theme.palette.secondary.light,
-                color: theme.palette.text.primary
-              }
-            }}
+            sx={{ ...styles.button, ...styles.submitButton }}
           >
             Submit Quiz
           </Button>
@@ -429,45 +268,15 @@ const Quiz = () => {
             onClick={handleNext}
             disabled={currentAnswer === null}
             endIcon={<ArrowForwardIcon />}
-            sx={{
-              borderRadius: 10,
-              px: 3,
-              py: 1,
-              fontWeight: 600,
-              border: theme.palette.secondary.main,
-              color: theme.palette.text.secondary,
-              background: theme.palette.primary.main,
-              '&:hover': {
-                backgroundColor: theme.palette.primary.dark,
-                boxShadow: 10,
-              },
-              '&.Mui-disabled': {
-                opacity: 0.5,
-                border: theme.palette.secondary.main,
-                background: theme.palette.secondary.light,
-                color: theme.palette.text.primary
-              }
-            }}
+            sx={{ ...styles.button, ...styles.prevNextButton }}
           >
             Next
           </Button>
         )}
       </Box>
 
-      <Box sx={{
-        mt: 4,
-        pt: 3,
-        borderTop: '1px solid rgba(0,0,0,0.08)',
-        display: 'flex',
-        justifyContent: 'center'
-      }}>
-        <Box sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: 1,
-          justifyContent: 'center',
-          maxWidth: '100%'
-        }}>
+      <Box sx={styles.numberBox}>
+        <Box sx={styles.numberGroup}>
           {quiz.questions.map((_, index) => {
             const isAnswered = userAnswers[index]?.selectedOption !== null;
             const isCurrent = currentQuestion === index;
@@ -476,39 +285,7 @@ const Quiz = () => {
               <Button
                 key={index}
                 onClick={() => setCurrentQuestion(index)}
-                sx={{
-                  minWidth: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  p: 0,
-                  fontWeight: 600,
-                  color: isCurrent
-                    ? '#fff'
-                    : isAnswered
-                      ? theme.palette.success.main
-                      : theme.palette.text.primary,
-                  backgroundColor: isCurrent
-                    ? theme.palette.primary.main
-                    : isAnswered
-                      ? 'rgba(76, 175, 80, 0.1)'
-                      : 'rgba(255,255,255,0.8)',
-                  border: isAnswered && !isCurrent
-                    ? `2px solid ${theme.palette.success.main}`
-                    : isCurrent
-                      ? 'none'
-                      : '1px solid rgba(0,0,0,0.1)',
-                  boxShadow: isCurrent
-                    ? `0 4px 10px ${theme.palette.primary.main}80`
-                    : 'none',
-                  '&:hover': {
-                    backgroundColor: isCurrent
-                      ? theme.palette.primary.dark
-                      : isAnswered
-                        ? 'rgba(76, 175, 80, 0.2)'
-                        : 'rgba(255,255,255,0.9)',
-                    transform: 'translateY(-2px)',
-                  }
-                }}
+                sx={styles.numberButton(isCurrent, isAnswered)}
               >
                 {index + 1}
               </Button>
