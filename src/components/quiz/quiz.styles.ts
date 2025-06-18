@@ -313,7 +313,7 @@ export const useStyles = () => {
             width: '100%',
             maxWidth: {
                 xs: '100%',
-                sm: '350px'  // Wider than difficulty toggle to accommodate 4 buttons
+                sm: '350px'
             },
             height: {
                 xs: '36px',
@@ -332,7 +332,7 @@ export const useStyles = () => {
                 border: 0,
                 flex: 1,
                 fontSize: {
-                    xs: '10px',  // Smaller font for mobile with 4 buttons
+                    xs: '10px',
                     sm: '12px'
                 },
                 '&:not(:first-of-type)': {
@@ -357,8 +357,8 @@ export const useStyles = () => {
             transition: 'color 0.3s ease',
             color: theme.palette.text.primary,
             padding: {
-                xs: '4px 4px',  // Less padding for mobile
-                sm: '6px 8px'   // Less padding than difficulty buttons
+                xs: '4px 4px',
+                sm: '6px 8px'
             },
             fontWeight: 600,
             '&.Mui-selected': {
@@ -372,7 +372,7 @@ export const useStyles = () => {
         toggleActiveDurationIndicator: {
             position: 'absolute',
             top: '3px',
-            width: 'calc(25% - 3px)',  // 25% for 4 buttons
+            width: 'calc(25% - 3px)',
             height: 'calc(100% - 6px)',
             backgroundColor: theme.palette.primary.main,
             borderRadius: '50px',
@@ -513,7 +513,7 @@ export const useStyles = () => {
             minHeight: '30vh',
             maxHeight: {
                 xs: 'calc(60vh - 120px)',
-                sm: '55vh',  // Increased height for tablets
+                sm: '55vh',
                 md: '60vh'
             },
             height: 'auto',
