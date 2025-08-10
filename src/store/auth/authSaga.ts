@@ -4,7 +4,6 @@ import { authActions } from "./authSlice";
 import { getUser, loginUser, registerUser } from "./authBaseApi";
 import { snackbarActions } from "../snackbar/snackbarSlice";
 
-// Define interfaces for the API response
 interface User {
     id: string;
     email: string;
@@ -41,7 +40,6 @@ interface RegisterResponse {
     user: User;
 }
 
-// Saga for handling login
 export function* loginUserSaga(
     action: PayloadAction<LoginPayload>
 ): Generator<any, void, LoginResponse> {

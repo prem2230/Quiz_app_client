@@ -1,4 +1,3 @@
-// src/components/common/Pagination/Pagination.tsx
 import React from 'react';
 import { Box, Pagination as MuiPagination } from '@mui/material';
 import useQuestion from '../question/hooks';

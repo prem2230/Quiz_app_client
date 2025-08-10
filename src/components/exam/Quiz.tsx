@@ -139,7 +139,7 @@ const Quiz = () => {
       const correctOption = question.options?.find(opt => opt.isCorrect);
 
       if (correctOption && answer.selectedOption === correctOption._id) {
-        return score + (question.marks || 1); // Use question marks or default to 1
+        return score + (question.marks || 1);
       }
       return score;
     }, 0);

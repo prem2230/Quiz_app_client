@@ -8,7 +8,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 const makeStore = (): EnhancedStore<RootState> => {
     const sagaMiddleware = createSagaMiddleware();
-    
+
     const store = configureStore({
         reducer: rootReducer,
         middleware: (getDefaultMiddleware) =>
@@ -24,10 +24,8 @@ const makeStore = (): EnhancedStore<RootState> => {
 
 export const store = makeStore();
 
-// Define AppDispatch type
 export type AppDispatch = typeof store.dispatch;
 
-// Export the RootState type
 export type { RootState };
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();
